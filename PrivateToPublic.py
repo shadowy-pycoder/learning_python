@@ -29,8 +29,10 @@ class PublicKey:
         private_wif = base58.b58encode(bytes.fromhex(private_wif)).decode("UTF-8")
         private_wif_comp = base58.b58encode(bytes.fromhex(private_wif_comp)).decode("UTF-8")
 
-        print(f"WIF - private key\n{private_wif}\n")
+        print(f"WIF - private key\n{private_wif}")
+        print(f"Length: {len(private_wif)}\n")
         print(f"WIF compressed - private key\n{private_wif_comp}")
+        print(f"Length: {len(private_wif_comp)}\n")
 
     def modinv(self, a, n): #Extended Euclidean Algorithm/'division' in elliptic curves
         n = self.Pcurve
@@ -72,17 +74,17 @@ class PublicKey:
         print(public_key)
         print("\nthe uncompressed public key (HEX):") 
         message = f"04{(hex(public_key[0])[2:]):064}{(hex(public_key[1])[2:]):064}"
-        print(message.upper())
+        print(message)
         print(f"Length: {len(message)}")
         print("\nthe official Public Key - compressed:") 
         if public_key[1] % 2 == 1: # If the Y value for the Public Key is odd.
             message = f"03{hex(public_key[0])[2:]:064}"
-            print(message.upper())
-            print(f"Length: {len(message)}")
+            print(message)
+            print(f"Length: {len(message)}\n")
         else: # Or else, if the Y value is even.
             message = f"02{hex(public_key[0])[2:]:064}"
-            print(message.upper())
-            print(f"Length: {len(message)}")
+            print(message)
+            print(f"Length: {len(message)}\n")
 
 prompt  = input(f"Please insert your private key in HEX format (0x): ")
 
