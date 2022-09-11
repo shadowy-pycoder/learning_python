@@ -1,4 +1,6 @@
-
+from hashlib import sha256
+import base58
+import binascii
 
 class PublicKey:
     """Calculating a public key using private key"""
@@ -11,11 +13,27 @@ class PublicKey:
        self.Gy = 32670510020758816978083085130507043184471273380659243275938904335757337482424
        self.GPoint = (self.Gx, self.Gy) # This is our generator point. Trillions of dif ones possible
 
+    def privateWIF(self):
 
+        self.private_wif = f"80{hex(self.private_key)[2:]}"
+        self.private_wif_comp = f"80{hex(self.private_key)[2:]}01"
+        self.checksum = sha256(binascii.unhexlify(self.private_wif)).hexdigest()
+        self.checksum = sha256(binascii.unhexlify(self.checksum)).hexdigest()[:8]
+        self.checksum_comp = sha256(binascii.unhexlify(self.private_wif_comp)).hexdigest()
+        self.checksum_comp = sha256(binascii.unhexlify(self.checksum_comp)).hexdigest()[:8]
+
+        self.private_wif = f"{self.private_wif}{self.checksum}"
+        self.private_wif_comp = f"{self.private_wif_comp}{self.checksum_comp}"
+
+        self.private_wif = base58.b58encode(bytes.fromhex(self.private_wif)).decode("UTF-8")
+        self.private_wif_comp = base58.b58encode(bytes.fromhex(self.private_wif_comp)).decode("UTF-8")
+        print(f"WIF - private key\n{self.private_wif}\n")
+        print(f"WIF compressed - private key\n{self.private_wif_comp}")
+        
     def modinv(self, a, n): #Extended Euclidean Algorithm/'division' in elliptic curves
         n = self.Pcurve
         lm, hm = 1,0
-        low, high = a%n,n
+        low, high = a%n, n
         while low > 1:
             ratio = int(high/low)
             nm, new = int(hm-lm*ratio), int(high-low*ratio)
@@ -71,5 +89,5 @@ except ValueError:
     print("You did not enter a hexadecimal number!")
 my_key = PublicKey(prompt)
 my_key.PublicCalc()
-
+my_key.privateWIF()
 
