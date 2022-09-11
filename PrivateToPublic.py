@@ -13,15 +13,19 @@ class PublicKey:
         self.Gy = 32670510020758816978083085130507043184471273380659243275938904335757337482424
         self.GPoint = (self.Gx, self.Gy) # This is our generator point. Trillions of dif ones possible
 
+    def hash(self, key):
+        """Function performing hashing"""
+
+        hash = sha256(binascii.unhexlify(key))
+        return hash.hexdigest()
+
     def privateWIF(self):
         """Converting a private key to WIF"""
 
         private_wif = f"80{hex(self.private_key)[2:]}"
         private_wif_comp = f"80{hex(self.private_key)[2:]}01"
-        checksum = sha256(binascii.unhexlify(private_wif)).hexdigest()
-        checksum = sha256(binascii.unhexlify(checksum)).hexdigest()[:8]
-        checksum_comp = sha256(binascii.unhexlify(private_wif_comp)).hexdigest()
-        checksum_comp = sha256(binascii.unhexlify(checksum_comp)).hexdigest()[:8]
+        checksum = self.hash(self.hash(private_wif))[:8]
+        checksum_comp = self.hash(self.hash(private_wif_comp))[:8]
 
         private_wif = f"{private_wif}{checksum}"
         private_wif_comp = f"{private_wif_comp}{checksum_comp}"
