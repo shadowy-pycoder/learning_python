@@ -5,15 +5,16 @@ import binascii
 class PublicKey:
     """Calculating a public key using private key"""
     def __init__(self, private_key):   
-       self.private_key = private_key
-       self.Pcurve = 2**256 - 2**32 - 2**9 - 2**8 - 2**7 - 2**6 - 2**4 - 1 # The proven prime
-       self.N = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141 # Number of points in the field
-       self.Acurve = 0; self.Bcurve = 7 # These two defines the elliptic curve. y^2 = x^3 + Acurve * x + Bcurve
-       self.Gx = 55066263022277343669578718895168534326250603453777594175500187360389116729240
-       self.Gy = 32670510020758816978083085130507043184471273380659243275938904335757337482424
-       self.GPoint = (self.Gx, self.Gy) # This is our generator point. Trillions of dif ones possible
+        self.private_key = private_key
+        self.Pcurve = 2**256 - 2**32 - 2**9 - 2**8 - 2**7 - 2**6 - 2**4 - 1 # The proven prime
+        self.N = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141 # Number of points in the field
+        self.Acurve = 0; self.Bcurve = 7 # These two defines the elliptic curve. y^2 = x^3 + Acurve * x + Bcurve
+        self.Gx = 55066263022277343669578718895168534326250603453777594175500187360389116729240
+        self.Gy = 32670510020758816978083085130507043184471273380659243275938904335757337482424
+        self.GPoint = (self.Gx, self.Gy) # This is our generator point. Trillions of dif ones possible
 
     def privateWIF(self):
+        """Converting a ptivate key to WIF"""
 
         self.private_wif = f"80{hex(self.private_key)[2:]}"
         self.private_wif_comp = f"80{hex(self.private_key)[2:]}01"
@@ -27,9 +28,10 @@ class PublicKey:
 
         self.private_wif = base58.b58encode(bytes.fromhex(self.private_wif)).decode("UTF-8")
         self.private_wif_comp = base58.b58encode(bytes.fromhex(self.private_wif_comp)).decode("UTF-8")
+
         print(f"WIF - private key\n{self.private_wif}\n")
         print(f"WIF compressed - private key\n{self.private_wif_comp}")
-        
+
     def modinv(self, a, n): #Extended Euclidean Algorithm/'division' in elliptic curves
         n = self.Pcurve
         lm, hm = 1,0
@@ -63,6 +65,7 @@ class PublicKey:
         return(Q)
 
     def PublicCalc(self):
+        """Calculating a public key"""
 
         public_key = self.EccMultiply(self.GPoint, self.private_key)
         print("\nthe uncompressed public key (not address):") 
