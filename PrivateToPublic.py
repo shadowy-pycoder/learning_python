@@ -14,7 +14,7 @@ class PublicKey:
         self.GPoint = (self.Gx, self.Gy) # This is our generator point. Trillions of dif ones possible
 
     def privateWIF(self):
-        """Converting a ptivate key to WIF"""
+        """Converting a private key to WIF"""
 
         self.private_wif = f"80{hex(self.private_key)[2:]}"
         self.private_wif_comp = f"80{hex(self.private_key)[2:]}01"
