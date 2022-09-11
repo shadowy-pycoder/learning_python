@@ -16,21 +16,21 @@ class PublicKey:
     def privateWIF(self):
         """Converting a private key to WIF"""
 
-        self.private_wif = f"80{hex(self.private_key)[2:]}"
-        self.private_wif_comp = f"80{hex(self.private_key)[2:]}01"
-        self.checksum = sha256(binascii.unhexlify(self.private_wif)).hexdigest()
-        self.checksum = sha256(binascii.unhexlify(self.checksum)).hexdigest()[:8]
-        self.checksum_comp = sha256(binascii.unhexlify(self.private_wif_comp)).hexdigest()
-        self.checksum_comp = sha256(binascii.unhexlify(self.checksum_comp)).hexdigest()[:8]
+        private_wif = f"80{hex(self.private_key)[2:]}"
+        private_wif_comp = f"80{hex(self.private_key)[2:]}01"
+        checksum = sha256(binascii.unhexlify(private_wif)).hexdigest()
+        checksum = sha256(binascii.unhexlify(checksum)).hexdigest()[:8]
+        checksum_comp = sha256(binascii.unhexlify(private_wif_comp)).hexdigest()
+        checksum_comp = sha256(binascii.unhexlify(checksum_comp)).hexdigest()[:8]
 
-        self.private_wif = f"{self.private_wif}{self.checksum}"
-        self.private_wif_comp = f"{self.private_wif_comp}{self.checksum_comp}"
+        private_wif = f"{private_wif}{checksum}"
+        private_wif_comp = f"{private_wif_comp}{checksum_comp}"
 
-        self.private_wif = base58.b58encode(bytes.fromhex(self.private_wif)).decode("UTF-8")
-        self.private_wif_comp = base58.b58encode(bytes.fromhex(self.private_wif_comp)).decode("UTF-8")
+        private_wif = base58.b58encode(bytes.fromhex(private_wif)).decode("UTF-8")
+        private_wif_comp = base58.b58encode(bytes.fromhex(private_wif_comp)).decode("UTF-8")
 
-        print(f"WIF - private key\n{self.private_wif}\n")
-        print(f"WIF compressed - private key\n{self.private_wif_comp}")
+        print(f"WIF - private key\n{private_wif}\n")
+        print(f"WIF compressed - private key\n{private_wif_comp}")
 
     def modinv(self, a, n): #Extended Euclidean Algorithm/'division' in elliptic curves
         n = self.Pcurve
