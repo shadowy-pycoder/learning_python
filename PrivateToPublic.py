@@ -19,7 +19,7 @@ class PublicKey:
         hash = sha256(binascii.unhexlify(key))
         return hash.hexdigest()
 
-    def privateWIF(self):
+    def privatewif(self):
         """Converting a private key to WIF"""
 
         private_wif = f"80{hex(self.private_key)[2:]}"
@@ -48,32 +48,32 @@ class PublicKey:
             lm, low, hm, high = nm, new, lm, low
         return lm % n
 
-    def ECadd(self, a,b): # Not true addition, invented for EC. Could have been called anything.
+    def ecc_add(self, a,b): # Not true addition, invented for EC. Could have been called anything.
         LamAdd = ((b[1]-a[1]) * self.modinv(b[0]-a[0],self.Pcurve)) % self.Pcurve
         x = (LamAdd*LamAdd-a[0]-b[0]) % self.Pcurve
         y = (LamAdd*(a[0]-x)-a[1]) % self.Pcurve
         return (x,y)
 
-    def ECdouble(self, a): # This is called point doubling, also invented for EC.
+    def ecc_double(self, a): # This is called point doubling, also invented for EC.
         Lam = ((3*a[0]*a[0]+self.Acurve) * self.modinv((2*a[1]), self.Pcurve)) % self.Pcurve
         x = int((Lam*Lam-2*a[0]) % self.Pcurve)
         y = int((Lam*(a[0]-x)-a[1]) % self.Pcurve)
         return (x,y)
 
-    def EccMultiply(self, GenPoint, ScalarHex): #Double & add. Not true multiplication
-        if ScalarHex == 0 or ScalarHex >= self.N: raise Exception("Invalid Scalar/Private Key")
-        ScalarBin = str(bin(ScalarHex))[2:]
-        Q=GenPoint
-        for i in range (1, len(ScalarBin)): # This is invented EC multiplication.
-            Q=self.ECdouble(Q) # print "DUB", Q[0]; print
-            if ScalarBin[i] == "1":
-                Q=self.ECadd(Q,GenPoint) # print "ADD", Q[0]; print
-        return(Q)
+    def ecc_multiply(self, genpoint, scalarhex): #Double & add. Not true multiplication
+        if scalarhex == 0 or scalarhex >= self.N: raise Exception("Invalid Scalar/Private Key")
+        scalarbin = str(bin(scalarhex))[2:]
+        q = genpoint
+        for i in range (1, len(scalarbin)): # This is invented EC multiplication.
+            q = self.ecc_double(q) # print "DUB", Q[0]; print
+            if scalarbin[i] == "1":
+                q=self.ecc_add(q, genpoint) # print "ADD", Q[0]; print
+        return(q)
 
-    def PublicCalc(self):
+    def public_calc(self):
         """Calculating a public key"""
 
-        public_key = self.EccMultiply(self.GPoint, self.private_key)
+        public_key = self.ecc_multiply(self.GPoint, self.private_key)
         print("\nthe uncompressed public key (not address):") 
         print(public_key)
         print("\nthe uncompressed public key (HEX):") 
@@ -97,6 +97,6 @@ try:
 except ValueError:
     print("You did not enter a hexadecimal number!")
 my_key = PublicKey(prompt)
-my_key.PublicCalc()
-my_key.privateWIF()
+my_key.public_calc()
+my_key.privatewif()
 
