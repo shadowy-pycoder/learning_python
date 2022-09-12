@@ -6,12 +6,12 @@ class PublicKey:
     """Calculating a public key using private key"""
     def __init__(self, private_key):   
         self.private_key = private_key
-        self.Pcurve = 2**256 - 2**32 - 2**9 - 2**8 - 2**7 - 2**6 - 2**4 - 1 # The proven prime
-        self.N = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141 # Number of points in the field
-        self.Acurve = 0; self.Bcurve = 7 # These two defines the elliptic curve. y^2 = x^3 + Acurve * x + Bcurve
-        self.Gx = 55066263022277343669578718895168534326250603453777594175500187360389116729240
-        self.Gy = 32670510020758816978083085130507043184471273380659243275938904335757337482424
-        self.GPoint = (self.Gx, self.Gy) # This is our generator point. Trillions of dif ones possible
+        self.p_curve = 2**256 - 2**32 - 2**9 - 2**8 - 2**7 - 2**6 - 2**4 - 1 # The proven prime
+        self.n_curve = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141 # Number of points in the field
+        self.a_curve, self.b_curve = 0, 7 # These two defines the elliptic curve. y^2 = x^3 + Acurve * x + Bcurve
+        self.gx = 55066263022277343669578718895168534326250603453777594175500187360389116729240
+        self.gy = 32670510020758816978083085130507043184471273380659243275938904335757337482424
+        self.gpoint = (self.gx, self.gy) # This is our generator point. Trillions of dif ones possible
 
     def hash(self, key):
         """Function performing hashing"""
@@ -39,7 +39,7 @@ class PublicKey:
         print(f"Length: {len(private_wif_comp)}\n")
 
     def modinv(self, a, n): #Extended Euclidean Algorithm/'division' in elliptic curves
-        n = self.Pcurve
+        n = self.p_curve
         lm, hm = 1,0
         low, high = a%n, n
         while low > 1:
@@ -49,31 +49,31 @@ class PublicKey:
         return lm % n
 
     def ecc_add(self, a,b): # Not true addition, invented for EC. Could have been called anything.
-        LamAdd = ((b[1]-a[1]) * self.modinv(b[0]-a[0],self.Pcurve)) % self.Pcurve
-        x = (LamAdd*LamAdd-a[0]-b[0]) % self.Pcurve
-        y = (LamAdd*(a[0]-x)-a[1]) % self.Pcurve
+        lam_add = ((b[1]-a[1]) * self.modinv(b[0]-a[0],self.p_curve)) % self.p_curve
+        x = (lam_add*lam_add-a[0]-b[0]) % self.p_curve
+        y = (lam_add*(a[0]-x)-a[1]) % self.p_curve
         return (x,y)
 
     def ecc_double(self, a): # This is called point doubling, also invented for EC.
-        Lam = ((3*a[0]*a[0]+self.Acurve) * self.modinv((2*a[1]), self.Pcurve)) % self.Pcurve
-        x = int((Lam*Lam-2*a[0]) % self.Pcurve)
-        y = int((Lam*(a[0]-x)-a[1]) % self.Pcurve)
+        lam = ((3*a[0]*a[0]+self.a_curve) * self.modinv((2*a[1]), self.p_curve)) % self.p_curve
+        x = int((lam*lam-2*a[0]) % self.p_curve)
+        y = int((lam*(a[0]-x)-a[1]) % self.p_curve)
         return (x,y)
 
     def ecc_multiply(self, genpoint, scalarhex): #Double & add. Not true multiplication
-        if scalarhex == 0 or scalarhex >= self.N: raise Exception("Invalid Scalar/Private Key")
+        if scalarhex == 0 or scalarhex >= self.n_curve: raise Exception("Invalid Scalar/Private Key")
         scalarbin = str(bin(scalarhex))[2:]
         q = genpoint
         for i in range (1, len(scalarbin)): # This is invented EC multiplication.
-            q = self.ecc_double(q) # print "DUB", Q[0]; print
+            q = self.ecc_double(q)
             if scalarbin[i] == "1":
-                q=self.ecc_add(q, genpoint) # print "ADD", Q[0]; print
+                q = self.ecc_add(q, genpoint)
         return(q)
 
     def public_calc(self):
         """Calculating a public key"""
 
-        public_key = self.ecc_multiply(self.GPoint, self.private_key)
+        public_key = self.ecc_multiply(self.gpoint, self.private_key)
         print("\nthe uncompressed public key (not address):") 
         print(public_key)
         print("\nthe uncompressed public key (HEX):") 
