@@ -1,10 +1,11 @@
-from hashlib import sha256
+#from hashlib import sha256
+import hashlib
 import base58
 import binascii
 
 class PublicKey:
     """Calculating a public key using private key"""
-    def __init__(self, private_key):   
+    def __init__(self, private_key):
         self.private_key = private_key
         self.p_curve = 2**256 - 2**32 - 2**9 - 2**8 - 2**7 - 2**6 - 2**4 - 1 # The proven prime
         self.n_curve = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141 # Number of points in the field
@@ -14,10 +15,22 @@ class PublicKey:
         self.gpoint = (self.gx, self.gy) # This is our generator point. Trillions of dif ones possible
 
     def hash(self, key):
-        """Function performing hashing"""
+        """Function performing SHA-256 hashing"""
+        sha = hashlib.sha256()
+        sha.update(binascii.unhexlify(key))
+        return sha.hexdigest()
 
-        hash = sha256(binascii.unhexlify(key))
-        return hash.hexdigest()
+    def public_address(self, key):
+        """Function calculating address"""
+        ripemd = hashlib.new('ripemd160')
+        sha = hashlib.sha256()
+        sha.update(binascii.unhexlify(key))
+        ripemd.update(sha.digest())
+        address = f"00{ripemd.hexdigest()}"
+        checksum = self.hash(self.hash(address))[:8]
+        address = f"{address}{checksum}"
+        address = base58.b58encode(bytes.fromhex(address)).decode("UTF-8")
+        return address
 
     def privatewif(self):
         """Converting a private key to WIF"""
@@ -33,7 +46,7 @@ class PublicKey:
         private_wif = base58.b58encode(bytes.fromhex(private_wif)).decode("UTF-8")
         private_wif_comp = base58.b58encode(bytes.fromhex(private_wif_comp)).decode("UTF-8")
 
-        print(f"WIF - private key\n{private_wif}")
+        print(f"\nWIF - private key\n{private_wif}")
         print(f"Length: {len(private_wif)}\n")
         print(f"WIF compressed - private key\n{private_wif_comp}")
         print(f"Length: {len(private_wif_comp)}\n")
@@ -79,7 +92,9 @@ class PublicKey:
         print("\nthe uncompressed public key (HEX):") 
         message = f"04{(hex(public_key[0])[2:]):064}{(hex(public_key[1])[2:]):064}"
         print(message)
-        print(f"Length: {len(message)}")
+        print(f"Length: {len(message)}\n")
+        message = self.public_address(message)
+        print(f"Address from uncompressed key\n{message}")
         print("\nthe official Public Key - compressed:") 
         if public_key[1] % 2 == 1: # If the Y value for the Public Key is odd.
             message = f"03{hex(public_key[0])[2:]:064}"
@@ -89,6 +104,8 @@ class PublicKey:
             message = f"02{hex(public_key[0])[2:]:064}"
             print(message)
             print(f"Length: {len(message)}\n")
+            message = self.public_address(message)
+            print(f"Address from compressed key\n{message}")
 
 prompt  = input(f"Please insert your private key in HEX format (0x): ")
 
