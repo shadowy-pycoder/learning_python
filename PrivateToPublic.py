@@ -100,6 +100,8 @@ class PublicKey:
             message = f"03{hex(public_key[0])[2:]:064}"
             print(message)
             print(f"Length: {len(message)}\n")
+            message = self.public_address(message)
+            print(f"Address from compressed key\n{message}")
         else: # Or else, if the Y value is even.
             message = f"02{hex(public_key[0])[2:]:064}"
             print(message)
