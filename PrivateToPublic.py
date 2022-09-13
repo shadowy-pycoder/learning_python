@@ -101,20 +101,20 @@ class PublicKey:
         print("\nThe uncompressed public key (not address):") 
         print(public_key)
         print("\nThe uncompressed public key (HEX):") 
-        message = f"04{(hex(public_key[0])[2:]):064}{(hex(public_key[1])[2:]):064}"
+        message = f"04{(hex(public_key[0])[2:]):0>64}{(hex(public_key[1])[2:]):0>64}"
         print(message)
         print(f"Length: {len(message)}\n")
         message = self.public_address(message)
         print(f"Address from uncompressed key\n{message}")
         print("\nThe official Public Key - compressed:") 
         if public_key[1] % 2 == 1: # If the Y value for the Public Key is odd.
-            message = f"03{hex(public_key[0])[2:]:064}"
+            message = f"03{hex(public_key[0])[2:]:0>64}"
             print(message)
             print(f"Length: {len(message)}\n")
             message = self.public_address(message)
             print(f"Address from compressed key\n{message}")
         else: # Or else, if the Y value is even.
-            message = f"02{hex(public_key[0])[2:]:064}"
+            message = f"02{hex(public_key[0])[2:]:0>64}"
             print(message)
             print(f"Length: {len(message)}\n")
             message = self.public_address(message)
