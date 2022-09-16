@@ -2808,3 +2808,1218 @@ my_tesla = ElectricCar('tesla', 'model s', 2019)
 print(my_tesla.get_descriptive_name())
 my_tesla.battery.describe_battery()
 my_tesla.battery.get_range()
+#Exceptions
+
+#Whenever an error occurs that makes Python unsure
+# what to do next, it creates an exception object. If
+# you write code that handles the exception, the
+# program will continue running.
+
+#Exceptions are handled with try-except blocks. A
+# try-except block asks Python to do something, but it
+# also tells Python what to do if an exception is
+# raised. When you use try-except blocks, your programs
+# will continue running even if things start to go
+# wrong. Instead of tracebacks, which can be confusing
+# for users to read, users will see friendly error
+# messages that you write.
+
+#Handling the ZeroDivisionError Exception
+
+#The error reported at ➊ in the traceback,
+# ZeroDivisionError, is an exception object. Python
+# creates this kind of object in response to a situation
+# where it can’t do what we ask it to. When this
+# happens, Python stops the program and tells us the
+# kind of exception that was raised. We can use this
+# information to modify our program. We’ll tell Python
+# what to do when this kind of exception occurs; that
+# way, if it happens again, we’re prepared.
+
+#When you think an error may occur, you can write a try
+#-except block to handle the exception that might be
+# raised. You tell Python to try running some code, and
+# you tell it what to do if the code results in a
+# particular kind of exception.
+
+try:
+    print(5/0)
+except ZeroDivisionError:
+    print("You can't divide by zero!")
+
+#If the code in a try block works, Python skips over
+# the except block. If the code in the try block causes
+# an error, Python looks for an except block whose
+# error matches the one that was raised and runs the
+# code in that block.
+
+#Using Exceptions to Prevent Crashes
+
+print("Give me two numbers, and I'll divide them.")
+print("Enter 'q' to quit.")
+
+while True:
+    #first_number = input("\nFirst number: ")
+    first_number = 2
+    if first_number == 'q':
+        break
+    #second_number = input("Second number: ")
+    second_number = 2
+    if second_number == 'q':
+        break
+    answer = int(first_number) / int(second_number)
+    print(answer)
+    break
+
+#It’s bad that the program crashed, but it’s also not
+# a good idea to let users see tracebacks. Nontechnical
+# users will be confused by them, and in a malicious
+# setting, attackers will learn more than you want them
+#to know from a traceback. For example, they’ll know
+# the name of your program file, and they’ll see a part
+# of your code that isn’t working properly. A skilled
+# attacker can sometimes use this information to
+# determine which kind of attacks to use against your
+# code.
+
+#The else Block
+
+#We can make this program more error resistant by
+# wrapping the line that might produce errors in a
+# try-except block. The error occurs on the line that
+# performs the division, so that’s where we’ll put the
+# try-except block. This example also includes an else
+# block. Any code that depends on the try block
+# executing successfully goes in the else block:
+
+
+print("Give me two numbers, and I'll divide them.")
+print("Enter 'q' to quit.")
+
+
+while True:
+    #first_number = input("\nFirst number: ")
+    first_number = 2
+    if first_number == 'q':
+        break
+    #second_number = input("Second number: ")
+    second_number = 0
+    if second_number == 'q':
+        break
+    try:
+        answer = int(first_number) / int(second_number)
+    except ZeroDivisionError:
+        print("You can't divide by 0!")
+        break
+    else:
+        print(answer)
+        break
+
+#We ask Python to try to complete the division operation
+# in a try block ➊, which includes only the code that
+# might cause an error. Any code that depends on the
+# try block succeeding is added to the else block. In
+# this case if the division operation is successful,
+# we use the else block to print the result ➌.
+#The except block tells Python how to respond when a
+# ZeroDivisionError arises ➋. If the try block doesn’t
+# succeed because of a division by zero error, we print
+# a friendly message telling the user how to avoid this
+# kind of error.
+
+#The try-except-else block works like this: Python
+# attempts to run the code in the try block. The only
+# code that should go in a try block is code that might
+# cause an exception to be raised. Sometimes you’ll
+# have additional code that should run only if the try
+# block was successful; this code goes in the else
+# block. The except block tells Python what to do in
+# case a certain exception arises when it tries to run
+# the code in the try block.
+
+#Handling the FileNotFoundError Exception
+
+#filename = 'alice.txt'
+
+#with open(filename, encoding='utf-8') as f:
+    #contents = f.read()
+
+#There are two changes here. One is the use of the
+# variable f to represent the file object, which is a
+# common convention. The second is the use of the
+# encoding argument. This argument is needed when your
+# system’s default encoding doesn’t match the encoding
+# of the file that’s being read.
+
+#In this example, the open() function produces the
+# error, so to handle it, the try block will begin with
+# the line that contains open():
+
+filename = 'alice.txt'
+
+try:
+    with open(filename, encoding='utf-8') as f:
+        contents = f.read()
+except FileNotFoundError:
+        print(f"Sorry, the file {filename} does not exist.")
+
+#Analyzing Text
+
+#We’ll use the string method split(), which can build
+# a list of words from a string. Here’s what split()
+# does with a string containing just the title "Alice
+# in Wonderland":
+
+title = "Alice in Wonderland"
+print(title.split())
+
+#The split() method separates a string into parts
+# wherever it finds a space and stores all the parts
+# of the string in a list. The result is a list of
+# words from the string, although some punctuation may
+# also appear with some of the words.
+
+filename = 'text_files/alice.txt'
+
+try:
+    with open(filename, encoding='utf-8') as f:
+        contents = f.read()
+except FileNotFoundError:
+    print(f"Sorry, the file {filename} does not exist.")
+else:
+# Count the approximate number of words in the file.
+    words = contents.split()
+    num_words = len(words)
+    print(f"The file {filename} has about {num_words} words.")
+
+#At ➊ we take the string contents, which now contains
+# the entire text of Alice in Wonderland as one long
+# string, and use the split() method to produce a list
+# of all the words in the book. When we use len() on
+# this list to examine its length, we get a good
+# approximation of the number of words in the original
+# string ➋. At ➌ we print a statement that reports how
+# many words were found in the file. This code is
+# placed in the else block because it will work only if
+# the code in the try block was executed successfully.
+
+#Working with Multiple Files
+
+def count_words(filename):
+    """Count the approximate number of words in a file."""
+    try:
+        with open(filename, encoding='utf-8') as f:
+            contents = f.read()
+    except FileNotFoundError:
+            print(f"Sorry, the file {filename} does not exist.")
+    else:
+        words = contents.split()
+        num_words = len(words)
+        print(f"The file {filename} has about {num_words} words.")
+
+filename = 'text_files/alice.txt'
+count_words(filename)
+
+#Now we can write a simple loop to count the words in
+# any text we want to analyze. We do this by storing
+# the names of the files we want to analyze in a list,
+# and then we call count_words() for each file in the
+# list.
+
+filenames = ['text_files/alice.txt', 'text_files/siddhartha.txt', 'text_files/moby_dick.txt', 'text_files/little_women.txt']
+for filename in filenames:
+    count_words(filename)
+
+#If we don’t catch the FileNotFoundError that
+# siddhartha.txt raised, the user would see a full
+# traceback, and the program would stop running after
+# trying to analyze Siddhartha. It would never analyze
+# Moby Dick or Little Women
+
+def count_words(filename):
+    """Count the approximate number of words in a file."""
+    try:
+        with open(filename, encoding='utf-8') as f:
+            contents = f.read()
+    except FileNotFoundError:
+        pass
+    else:
+        words = contents.split()
+        num_words = len(words)
+        print(f"The file {filename} has about {num_words}")
+
+filenames = ['text_files/alice.txt', 'text_files/siddhartha.txt', 'text_files/moby_dick.txt', 'text_files/little_women.txt']
+for filename in filenames:
+    count_words(filename)
+
+#The only difference between this listing and the
+# previous one is the pass statement at ➊. Now when a
+# FileNotFoundError is raised, the code in the except
+# block runs, but nothing happens. No traceback is
+# produced, and there’s no output in response to the
+# error that was raised.
+
+#The pass statement also acts as a placeholder. It’s a
+# reminder that you’re choosing to do nothing at a
+# specific point in your program’s execution and that
+# you might want to do something there later. For
+# example, in this program we might decide to write
+# any missing filenames to a file called
+# missing_files.txt. Our users wouldn’t see this file,
+# but we’d be able to read the file and deal with any
+# missing texts.
+
+#Deciding Which Errors to Report
+
+#Giving users information they aren’t looking for can
+# decrease the usability of your program.
+
+#every time your program depends on something external,
+# such as user input, the existence of a file, or the
+# availability of a network connection, there is a
+# possibility of an exception being raised. A little
+# experience will help you know where to include
+# exception handling blocks in your program and how
+# much to report to users about errors that arise.
+
+#You can use the count() method to find out how many
+# times a word or phrase appears in a string. For
+# example, the following code counts the number of times
+# 'row' appears in a string:
+
+#line = "Row, row, row your boat"
+#line.count('row')
+#line.lower().count('row')
+
+#Storing Data
+
+#The json module allows you to dump simple Python data
+# structures into a file and load the data from that
+# file the next time the program runs. You can also
+# use json to share data between different Python
+# programs. Even better, the JSON data format is not
+# specific to Python, so you can share data you store
+# in the JSON format with people who work in many other
+# programming languages. It’s a useful and portable
+# format, and it’s easy to learn.
+
+#Using json.dump() and json.load()
+
+#Let’s write a short program that stores a set of
+# numbers and another program that reads these numbers
+# back into memory. The first program will use
+# json.dump() to store the set of numbers, and the
+# second program will use json.load().
+#The json.dump() function takes two arguments: a piece
+# of data to store and a file object it can use to store
+# the data. Here’s how you can use json.dump() to store
+# a list of numbers:
+
+import json
+
+numbers = [2, 3, 5, 7, 11, 13]
+
+filename = 'text_files/numbers.json'
+with open(filename, 'w') as f:
+    json.dump(numbers, f)
+
+#We first import the json module and then create a list
+# of numbers to work with. At ➊ we choose a filename
+# in which to store the list of numbers. It’s customary
+# to use the file extension .json to indicate that the
+# data in the file is stored in the JSON format. Then
+# we open the file in write mode, which allows json to
+# write the data to the file ➋. At ➌ we use the
+# json.dump() function to store the list numbers in
+# the file numbers.json.
+
+#Now we’ll write a program that uses json.load() to
+# read the list back into memory:
+
+import json
+
+filename = 'text_files/numbers.json'
+with open(filename) as f:
+    numbers = json.load(f)
+print(numbers)
+
+#At ➊ we make sure to read from the same file we wrote
+# to. This time when we open the file, we open it in
+# read mode because Python only needs to read from the
+# file ➋. At ➌ we use the json.load() function to load
+# the information stored in numbers.json, and we assign
+# it to the variable numbers. Finally we print the
+# recovered list of numbers and see that it’s the same
+# list created in number_writer.py:
+
+#This is a simple way to share data between two
+# programs.
+
+#Saving and Reading User-Generated Data
+
+import json
+
+username = input("What is your name? ")
+
+filename = 'text_files/username.json'
+with open(filename, 'w') as f:
+    json.dump(username, f)
+print(f"We'll remember you when you come back, {username}!")
+
+#At ➊ we prompt for a username to store. Next, we use
+# json.dump(), passing it a username and a file object,
+# to store the username in a file ➋. Then we print a
+# message informing the user that we’ve stored their
+# information ➌:
+
+#Now let’s write a new program that greets a user whose
+# name has already been stored:
+
+import json
+
+filename = 'text_files/username.json'
+
+with open(filename) as f:
+    username = json.load(f)
+print(f"Welcome back, {username}!")
+
+#At ➊ we use json.load() to read the information stored
+# in username.json and assign it to the variable
+# username. Now that we’ve recovered the username, we
+# can welcome them back ➋:
+
+#We need to combine these two programs into one file.
+# When someone runs remember_me.py, we want to retrieve
+# their username from memory if possible; therefore,
+# we’ll start with a try block that attempts to recover
+# the username. If the file username.json doesn’t exist,
+# we’ll have the except block prompt for a username
+# and store it in username.json for next time:
+
+import json
+
+# Load the username, if it has been stored previously.
+#  Otherwise, prompt for the username and store it.
+filename = 'text_files/username.json'
+try:
+    with open(filename) as f:
+        username = json.load(f)
+except FileNotFoundError:
+    username = input("What is your name? ")
+    with open(filename, 'w') as f:
+        json.dump(username, f)
+        print(f"We'll remember you when you come back, {username}!")
+else:
+    print(f"Welcome back, {username}!")
+
+#At ➊ we try to open the file username.json. If this
+# file exists, we read the username back into memory ➋
+# and print a message welcoming back the user in the
+# else block. If this is the first time the user runs
+# the program, username.json won’t exist and a
+# FileNotFoundError will occur ➌. Python will move on
+# to the except block where we prompt the user to enter
+# their username ➍. We then use json.dump() to store
+# the username and print a greeting ➎.
+
+#Refactoring
+
+#Often, you’ll come to a point where your code will
+# work, but you’ll recognize that you could improve
+# the code by breaking it up into a series of functions
+# that have specific jobs. This process is called
+# refactoring. Refactoring makes your code cleaner,
+# easier to understand, and easier to extend.
+
+import json
+
+def greet_user():
+    """Greet the user by name."""
+    filename = 'username.json'
+try:
+    with open(filename) as f:
+        username = json.load(f)
+except FileNotFoundError:
+    username = input("What is your name? ")
+    with open(filename, 'w') as f:
+        json.dump(username, f)
+    print(f"We'll remember you when you come back, {username}!")
+else:
+    print(f"Welcome back, {username}!")
+
+greet_user()
+
+#This file is a little cleaner, but the function
+# greet_user() is doing more than just greeting the
+# user—it’s also retrieving a stored username if one
+# exists and prompting for a new username if one
+# doesn’t exist.
+
+#Let’s refactor greet_user() so it’s not doing so many
+# different tasks. We’ll start by moving the code for
+# retrieving a stored username to a separate function:
+
+import json
+
+def get_stored_username():
+    """Get stored username if available."""
+    filename = 'text_files/username.json'
+    try:
+        with open(filename) as f:
+            username = json.load(f)
+    except FileNotFoundError:
+        return None
+    else:
+        return username
+
+def greet_user():
+    """Greet the user by name."""
+    username = get_stored_username()
+    if username:
+        print(f"Welcome back, {username}!")
+    else:
+        username = input("What is your name? ")
+        filename = 'text_files/username.json'
+        with open(filename, 'w') as f:
+            json.dump(username, f)
+        print(f"We'll remember you when you come back, {username}!")
+
+greet_user()
+
+#The new function get_stored_username() has a clear
+# purpose, as stated in the docstring at ➊. This
+# function retrieves a stored username and returns the
+# username if it finds one. If the file username.json
+# doesn’t exist, the function returns None ➋. This is
+# good practice: a function should either return the
+# value you’re expecting, or it should return None.
+# This allows us to perform a simple test with the
+# return value of the function. At ➌ we print a welcome
+# back message to the user if the attempt to retrieve
+# a username was successful, and if it doesn’t, we
+# prompt for a new username.
+
+import json
+
+def get_stored_username():
+    """Get stored username if available."""
+    filename = 'text_files/username.json'
+    try:
+        with open(filename) as f:
+            username = json.load(f)
+    except FileNotFoundError:
+        return None
+    else:
+        return username
+
+def get_new_username():
+    """Prompt for a new username."""
+    username = input("What is your name? ")
+    filename = 'username.json'
+    with open(filename, 'w') as f:
+        json.dump(username, f)
+    return username
+
+def greet_user():
+    """Greet the user by name."""
+    username = get_stored_username()
+    if username:
+        print(f"Welcome back, {username}!")
+    else:
+        username = get_new_username()
+        print(f"We'll remember you when you come back, {username}!")
+
+greet_user()
+
+#Each function in this final version of remember_me.py
+# has a single, clear purpose. We call greet_user(),
+# and that function prints an appropriate message: it
+# either welcomes back an existing user or greets a
+# new user. It does this by calling
+# get_stored_username(), which is responsible only for
+# retrieving a stored username if one exists. Finally,
+# greet_user() calls get_new_username() if necessary,
+# which is responsible only for getting a new username
+# and storing it. This compartmentalization of work is
+# an essential part of writing clear code that will be
+# easy to maintain and extend.
+
+#Reading an Entire File
+
+#create a file pi_digits.txt
+
+#Here’s a program that opens this file, reads it, and
+# prints the contents of the file to the screen:
+print("Reading an Entire File")
+with open('pi_digits.txt') as file_object:
+    contents = file_object.read()
+    print(contents)
+
+#To do any work with a file, even just printing its
+# contents, you first need to open the file to access
+#it. The open() function needs one argument: the name
+#of the file you want to open.
+#The open() function returns an object representing
+# the file. Here, open('pi_digits.txt') returns an
+# object representing pi_digits.txt. Python assigns
+# this object to file_object, which we’ll work with
+# later in the program.
+#we use the read() method in the second line of our
+# program to read the entire contents of the file and
+# store it as one long string in contents.
+#The only difference between this output and the
+# original file is the extra blank line at the end of
+# the output. The blank line appears because read()
+# returns an empty string when it reaches the end of
+# the file; this empty string shows up as a blank
+# line. If you want to remove the extra blank line,
+# you can use rstrip() in the call to print():
+
+with open('pi_digits.txt') as file_object:
+    contents = file_object.read()
+    print(contents.rstrip())
+
+#File Paths
+
+#A relative file path tells Python to look for a given
+# location relative to the directory where the
+# currently running program file is stored.
+print("File Paths")
+with open('text_files/pi_digits.txt') as file_object:
+    contents = file_object.read()
+    print(contents.rstrip())
+
+#This line tells Python to look for the desired .txt
+# file in the folder text_files and assumes that
+# text_files is located inside 
+
+#You use an absolute path if a relative path doesn’t
+# work.
+
+file_path = '/data/data/com.termux/files//home/python_scripts/chapter9-11/text_files/pi_digits.txt'
+with open(file_path) as file_object:
+    contents = file_object.read()
+    print(contents.rstrip())
+
+#Reading Line by Line
+
+#You can use a for loop on the file object to examine
+# each line from a file one at a time:
+print("Reading line by line")
+
+filename = 'text_files/pi_digits.txt'
+
+with open(filename) as file_object:
+    for line in file_object:
+        print(line.rstrip())
+
+#Using rstrip() on each line in the print() call
+# eliminates these extra blank lines:
+
+#Making a List of Lines from a File
+
+#When you use with, the file object returned by open()
+# is only available inside the with block that
+# contains it. If you want to retain access to a
+# file’s contents outside the with block, you can
+# store the file’s lines in a list inside the block
+# and then work with that list.
+
+#The following example stores the lines of pi_digits.txt
+# in a list inside the with block and then prints the
+# lines outside the with block:
+print("Making a List of Lines from a File")
+
+filename = 'text_files/pi_digits.txt'
+
+with open(filename) as file_object:
+    lines = file_object.readlines()
+
+for line in lines:
+    print(line.rstrip())
+
+#At ➊ the readlines() method takes each line from the
+# file and stores it in a list. This list is then
+# assigned to lines, which we can continue to work
+# with after the with block ends. At ➋ we use a simple
+# for loop to print each line from lines.
+
+#Working with a File’s Contents
+print("Working with a File’s Contents")
+#First, we’ll attempt to build a single string
+# containing all the digits in the file with no
+# whitespace in it:
+
+filename = 'text_files/pi_digits.txt'
+
+with open(filename) as file_object:
+    lines = file_object.readlines()
+
+pi_string = ''
+for line in lines:
+    pi_string += line.rstrip()
+
+print(pi_string)
+print(len(pi_string))
+
+#At ➊ we create a variable, pi_string, to hold the
+# digits of pi. We then create a loop that adds each
+# line of digits to pi_string and removes the newline
+# character from each line ➋. At ➌ we print this string
+# and also show how long the string is:
+#The variable pi_string contains the whitespace that
+# was on the left side of the digits in each line, but
+# we can get rid of that by using strip() instead of
+# rstrip()
+
+#When Python reads from a text file, it interprets all
+# text in the file as a string. If you read in a number
+# and want to work with that value in a numerical
+# context, you’ll have to convert it to an integer
+# using the int() function or convert it to a float
+# using the float() function.
+
+#Large Files: One Million Digits
+print("Large Files: One Million Digits")
+
+filename = 'text_files/pi_million_digits.txt'
+
+with open(filename) as file_object:
+    lines = file_object.readlines()
+pi_string = ''
+for line in lines:
+    pi_string += line.strip()
+
+print(f"{pi_string[:52]}...")
+print(len(pi_string))
+
+#Is Your Birthday Contained in Pi?
+print("Is Your Birthday Contained in Pi?")
+
+filename = 'text_files/pi_million_digits.txt'
+
+with open(filename) as file_object:
+    lines = file_object.readlines()
+pi_string = ''
+for line in lines:
+    pi_string += line.strip()
+
+#birthday = input("Enter your birthday, in the form mmddyy: ")
+birthday = '160990'
+if birthday in pi_string:
+    print("Your birthday appears in the first million digits of pi!")
+else:
+    print("Your birthday does not appear in the first million digits of pi.")
+
+#You can use the replace() method to replace any word
+# in a string with a different word. Here’s a quick
+# example showing how to replace 'dog' with 'cat' in
+# a sentence:
+#>>> message = "I really like dogs."
+#>>> message.replace('dog', 'cat')
+#'I really like cats.'
+
+#Writing to a File
+
+#Writing to an Empty File
+
+#To write text to a file, you need to call open() with
+# a second argument telling Python that you want to
+# write to the file.
+
+filename = 'text_files/programming.txt'
+
+with open(filename, 'w') as file_object:
+    file_object.write("I love programming.")
+
+#The second argument, 'w', tells Python that we want
+# to open the file in write mode. You can open a file
+# in read mode ('r'), write mode ('w'), append mode
+# ('a'), or a mode that allows you to read and write
+# to the file ('r+'). If you omit the mode argument,
+# Python opens the file in read-only mode by default.
+#However, be careful opening a file in write mode ('w')
+# because if the file does exist, Python will erase
+# the contents of the file before returning the file
+# object.
+
+#At ➋ we use the write() method on the file object to
+# write a string to the file.
+
+#Python can only write strings to a text file. If you
+# want to store numerical data in a text file, you’ll
+# have to convert the data to string format first using
+# the str() function.
+
+#Writing Multiple Lines
+#The write() function doesn’t add any newlines to the
+# text you write. So if you write more than one line
+# without including newline characters, your file may
+# not look the way you want it to:
+
+filename = 'text_files/programming.txt'
+
+with open(filename, 'w') as file_object:
+    file_object.write("I love programming.\n")
+    file_object.write("I love creating new games.\n")
+
+#Including newlines in your calls to write() makes each
+# string appear on its own line:
+#You can also use spaces, tab characters, and blank
+# lines to format your output, just as you’ve been
+# doing with terminal-based output.
+
+#Appending to a File
+
+#When you open a file in append mode, Python doesn’t
+# erase the contents of the file before returning the
+# file object. Any lines you write to the file will be
+# added at the end of the file. If the file doesn’t
+# exist yet, Python will create an empty file for you.
+
+filename = 'text_files/programming.txt'
+
+with open(filename, 'a') as file_object:
+    file_object.write("I also love finding meaning in large datasets.\n")
+    file_object.write("I love creating apps that can run in a browser.\n")
+
+#At ➊ we use the 'a' argument to open the file for
+# appending rather than writing over the existing file.
+# At ➋ we write two new lines, which are added to
+# programming.txt:
+#Testing a Function
+
+#name_function.py
+def get_formatted_name(first, last):
+    """Generate a neatly formatted full name."""
+    full_name = f"{first} {last}"
+    return full_name.title()
+
+#To check that get_formatted_name() works, let’s make
+# a program that uses this function.
+
+#names.py
+#from name_function import get_formatted_name
+
+print("Enter 'q' at any time to quit.")
+while True:
+    first = input("\nPlease give me a first name: ")
+    if first == 'q':
+        break
+    last = input("Please give me a last name: ")
+    if last == 'q':
+        break
+
+    formatted_name = get_formatted_name(first, last)
+    print(f"\tNeatly formatted name: {formatted_name}.")
+
+#We could test our code by running names.py and entering
+# a name like Janis Joplin every time we modify
+# get_formatted_name(), but that would become tedious.
+# Fortunately, Python provides an efficient way to
+# automate the testing of a function’s output. If we
+# automate the testing of get_formatted_name(), we can
+# always be confident that the function will work when
+# given the kinds of names we’ve written tests for.
+
+#Unit Tests and Test Cases
+
+#The module unittest from the Python standard library
+# provides tools for testing your code. A unit test
+# verifies that one specific aspect of a function’s
+# behavior is correct. A test case is a collection of
+# unit tests that together prove that a function behaves
+# as it’s supposed to, within the full range of
+# situations you expect it to handle. A good test case
+# considers all the possible kinds of input a function
+# could receive and includes tests to represent each of
+# these situations. A test case with full coverage
+# includes a full range of unit tests covering all the
+# possible ways you can use a function. Achieving full
+# coverage on a large project can be daunting. It’s
+# often good enough to write tests for your code’s
+# critical behaviors and then aim for full coverage only
+# if the project starts to see widespread use.
+
+#A Passing Test
+
+#To write a test case for a function, import the
+# unittest module and the function you want to test.
+# Then create a class that inherits from
+# unittest.TestCase, and write a series of methods to
+# test different aspects of your function’s behavior.
+
+import unittest
+#from name_function import get_formatted_name
+
+def get_formatted_name(first, last):
+    """Generate a neatly formatted full name."""
+    full_name = f"{first} {last}"
+    return full_name.title()
+
+class NamesTestCase(unittest.TestCase):
+    """Tests for 'name_function.py'."""
+
+    def test_first_last_name(self):
+        """Do names like 'Janis Joplin' work?"""
+        formatted_name = get_formatted_name('janis', 'joplin')
+        self.assertEqual(formatted_name, 'Janis Joplin')
+
+if __name__ == '__main__':
+    unittest.main()
+
+#First, we import unittest and the function we want to
+# test, get_formatted_name(). At ➊ we create a class
+# called NamesTestCase, which will contain a series of
+# unit tests for get_formatted_name(). You can name the
+# class anything you want, but it’s best to call it
+# something related to the function you’re about to
+# test and to use the word Test in the class name. This
+# class must inherit from the class unittest.TestCase
+# so Python knows how to run the tests you write.
+#NamesTestCase contains a single method that tests one
+#aspect of get_formatted_name(). We call this method
+# test_first_last_name() because we’re verifying that
+# names with only a first and last name are formatted
+# correctly. Any method that starts with test_ will be
+# run automatically when we run test_name_function.py.
+# Within this test method, we call the function we want
+# to test. In this example we call get_formatted_name()
+# with the arguments 'janis' and 'joplin', and assign
+# the result to formatted_name ➋.
+#At ➌ we use one of unittest’s most useful features:
+# an assert method. Assert methods verify that a result
+# you received matches the result you expected to
+# receive. In this case, because we know
+# get_formatted_name() is supposed to return a
+# capitalized, properly spaced full name, we expect the
+# value of formatted_name to be Janis Joplin. To check
+# if this is true, we use unittest’s assertEqual()
+# method and pass it formatted_name and 'Janis Joplin'.
+# The line
+#self.assertEqual(formatted_name, 'Janis Joplin')
+#says, “Compare the value in formatted_name to the
+# string 'Janis Joplin'. If they are equal as expected,
+# fine. But if they don’t match, let me know!”
+#We’re going to run this file directly, but it’s
+# important to note that many testing frameworks
+# import your test files before running them. When
+#a file is imported, the interpreter executes the file
+# as it’s being imported. The if block at ➍ looks at a
+# special variable, __name__, which is set when the
+# program is executed. If this file is being run as
+# the main program, the value of __name__ is set to
+# '__main__'. In this case, we call unittest.main(),
+# which runs the test case. When a testing framework
+# imports this file, the value of __name__ won’t be
+# '__main__' and this block will not be executed.
+#When we run test_name_function.py, we get the
+# following output:
+
+
+#A Failing Test
+
+#What does a failing test look like? Let’s modify
+# get_formatted_name() so it can handle middle names,
+# but we’ll do so in a way that breaks the function
+# for names with just a first and last name, like
+# Janis Joplin.
+
+def get_formatted_name(first, middle, last):
+    """Generate a neatly formatted full name."""
+    full_name = f"{first} {middle} {last}"
+    return full_name.title()
+
+#This version should work for people with middle names,
+# but when we test it, we see that we’ve broken the
+# function for people with just a first and last name.
+
+#There’s a lot of information here because there’s a
+# lot you might need to know when a test fails. The
+# first item in the output is a single E ➊, which tells
+# us one unit test in the test case resulted in an
+# error. Next, we see that test_first_last_name() in
+# NamesTestCase caused an error ➋. Knowing which test
+# failed is critical when your test case contains many
+# unit tests. At ➌ we see a standard traceback, which
+# reports that the function call
+# get_formatted_name('janis', 'joplin') no longer works
+# because it’s missing a required positional argument.
+#We also see that one unit test was run ➍. Finally, we
+# see an additional message that the overall test case
+# failed and that one error occurred when running the
+# test case ➎. This information appears at the end of
+# the output so you see it right away; you don’t need
+# to scroll up through a long output listing to find
+# out how many tests failed.
+
+#Responding to a Failed Test
+
+#What do you do when a test fails? Assuming you’re
+# checking the right conditions, a passing test means
+# the function is behaving correctly and a failing test
+# means there’s an error in the new code you wrote. So
+# when a test fails, don’t change the test. Instead,
+# fix the code that caused the test to fail. Examine
+# the changes you just made to the function, and figure
+# out how those changes broke the desired behavior.
+
+#Let’s modify get_formatted_name() so middle names are
+# optional and then run the test case again. If it
+# passes, we’ll move on to making sure the function
+# handles middle names properly.
+
+#To make middle names optional, we move the parameter
+# middle to the end of the parameter list in the
+# function definition and give it an empty default
+# value. We also add an if test that builds the full
+# name properly, depending on whether or not a middle
+# name is provided:
+
+def get_formatted_name(first, last, middle=''):
+    """Generate a neatly formatted full name."""
+    if middle:
+        full_name = f"{first} {middle} {last}"
+    else:
+        full_name = f"{first} {last}"
+    return full_name.title()
+
+#Adding New Tests
+
+import unittest
+#from name_function import get_formatted_name
+
+def get_formatted_name(first, last, middle=''):
+    """Generate a neatly formatted full name."""
+    if middle:
+        full_name = f"{first} {middle} {last}"
+    else:
+        full_name = f"{first} {last}"
+    return full_name.title()
+
+class NamesTestCase(unittest.TestCase):
+    """Tests for 'name_function.py'."""
+
+    def test_first_last_name(self):
+        """Do names like 'Janis Joplin' work?"""
+        formatted_name = get_formatted_name('janis', 'joplin')
+        self.assertEqual(formatted_name, 'Janis Joplin')
+
+    def test_first_last_middle_name(self):
+        """Do names like 'Wolfgang Amadeus Mozart' work?"""
+        formatted_name = get_formatted_name(
+            'wolfgang', 'mozart', 'amadeus')
+        self.assertEqual(formatted_name, 'Wolfgang Amadeus Mozart')
+
+if __name__ == '__main__':
+    unittest.main()
+
+
+
+#Testing a Class
+
+#A Variety of Assert Methods
+
+#Assert Methods Available from the unittest Module
+
+#Method                   Use
+#assertEqual(a, b)        Verify that a == b
+#assertNotEqual(a, b)     Verify that a != b
+#assertTrue(x)            Verify that x is True
+#assertFalse(x)           Verify that x is False
+#assertIn(item, list)     Verify that item is in list
+#assertNotIn(item, list)  Verify that item is not in li>
+
+class AnonymousSurvey:
+    """Collect anonymous answers to a survey question."""
+
+    def __init__(self, question):
+        """Store a question, and prepare to store response"""
+        self.question = question
+        self.responses = []
+
+    def show_question(self):
+        """Show the survey question."""
+        print(self.question)
+
+    def store_response(self, new_response):
+        """Store a single response to the survey."""
+        self.responses.append(new_response)
+
+    def show_results(self):
+        """Show all the responses that have been given."""
+        print("Survey results:")
+        for response in self.responses:
+            print(f"- {response}")
+
+#To show that the AnonymousSurvey class works, let’s
+# write a program that uses the class:
+
+#from survey import AnonymousSurvey
+
+# Define a question, and make a survey.
+question = "What language did you first learn to speak?"
+my_survey = AnonymousSurvey(question)
+
+# Show the question, and store responses to the questio>
+my_survey.show_question()
+print("Enter 'q' at any time to quit.\n")
+while True:
+    response = input("Language: ")
+    if response == 'q':
+        break
+    my_survey.store_response(response)
+
+# Show the survey results.
+print("\nThank you to everyone who participated in the survey!")
+my_survey.show_results()
+
+#We could allow each user to enter more than one
+# response. We could write a method to list only
+# unique responses and to report how many times each
+# response was given. We could write another class to
+# manage nonanonymous surveys.
+#Implementing such changes would risk affecting the
+# current behavior of the class AnonymousSurvey. For
+# example, it’s possible that while trying to allow
+# each user to enter multiple responses, we could
+# accidentally change how single responses are handled.
+# To ensure we don’t break existing behavior as we
+# develop this module, we can write tests for the class.
+
+#Testing the AnonymousSurvey Class
+
+import unittest
+#from survey import AnonymousSurvey
+
+class TestAnonymousSurvey(unittest.TestCase):
+    """Tests for the class AnonymousSurvey"""
+    def test_store_single_response(self):
+        """Test that a single response is stored properly."""
+        question = "What language did you first learn to speak?"
+        my_survey = AnonymousSurvey(question)
+        my_survey.store_response('English')
+        self.assertIn('English', my_survey.responses)
+
+    def test_store_three_responses(self):
+        """Test that three individual responses are stored properly."""
+        question = "What language did you first learn to speak?"
+        my_survey = AnonymousSurvey(question)
+        responses = ['English', 'Spanish', 'Mandarin']
+        for response in responses:
+            my_survey.store_response(response)
+
+        for response in responses:
+            self.assertIn(response, my_survey.responses)
+
+if __name__ == '__main__':
+    unittest.main()
+
+#We start by importing the unittest module and the
+# class we want to test, AnonymousSurvey. We call our
+# test case TestAnonymousSurvey, which again inherits
+# from unittest.TestCase ➊. The first test method will
+# verify that when we store a response to the survey
+# question, the response ends up in the survey’s list
+# of responses. A good descriptive name for this method
+# is test_store_single_response() ➋. If this test fails,
+# we’ll know from the method name shown in the output
+# of the failing test that there was a problem storing
+# a single response to the survey.
+#To test the behavior of a class, we need to make an
+# instance of the class. At ➌ we create an instance
+# called my_survey with the question "What language
+# did you first learn to speak?" We store a single
+# response, English, using the store_response() method.
+# Then we verify that the response was stored correctly
+# by asserting that English is in the list
+# my_survey.responses ➍.
+
+#Let’s verify that three responses can be stored
+# correctly. To do this, we add another method to
+# TestAnonymousSurvey:
+
+#We call the new method test_store_three_responses().
+# We create a survey object just like we did in
+# test_store_single_response(). We define a list
+# containing three different responses ➊, and then we
+# call store_response() for each of these responses.
+# Once the responses have been stored, we write another
+# loop and assert that each response is now in
+# my_survey.responses ➋.
+
+#The setUp() Method
+
+#The unittest.TestCase class has a setUp() method that
+# allows you to create these objects once and then use
+# them in each of your test methods. When you include
+# a setUp() method in a TestCase class, Python runs
+# the setUp() method before running each method starting
+# with test_. Any objects created in the setUp() method
+# are then available in each test method you write.
+
+import unittest
+#from survey import AnonymousSurvey
+
+class TestAnonymousSurvey(unittest.TestCase):
+    """Tests for the class AnonymousSurvey."""
+
+    def setUp(self):
+        """
+            Create a survey and a set of responses for use in all test methods.
+        """
+        question = "What language did you first learn to speak?"
+        self.my_survey = AnonymousSurvey(question)
+        self.responses = ['English', 'Spanish', 'Mandarin']
+
+    def test_store_single_response(self):
+        """Test that a single response is stored properly."""
+        self.my_survey.store_response(self.responses[0])
+        self.assertIn(self.responses[0], self.my_survey.responses)
+
+    def test_store_three_responses(self):
+        """Test that three individual responses are stored properly."""
+        for response in self.responses:
+            self.my_survey.store_response(response)
+        for response in self.responses:
+            self.assertIn(response, self.my_survey.responses)
+
+if __name__ == '__main__':
+    unittest.main()
+
+#The method setUp() does two things: it creates a
+# survey instance ➊, and it creates a list of responses
+# ➋. Each of these is prefixed by self, so they can be
+# used anywhere in the class. This makes the two test
+# methods simpler, because neither one has to make a
+# survey instance or a response. The method
+# test_store_single_response() verifies that the first
+# response in self.responses—self.responses[0]—can be
+# stored correctly, and test_store_three_responses()
+# verifies that all three responses in self.responses
+# can be stored correctly.
+#When we run test_survey.py again, both tests still
+# pass. These tests would be particularly useful when
+# trying to expand AnonymousSurvey to handle multiple
+# responses for each person. After modifying the code
+# to accept multiple responses, you could run these
+# tests and make sure you haven’t affected the ability
+# to store a single response or a series of individual
+# responses.
+#When you’re testing your own classes, the setUp()
+# method can make your test methods easier to write.
+# You make one set of instances and attributes in
+# setUp() and then use these instances in all your
+# test methods. This is much easier than making a new
+# set of instances and attributes in each test method.
+
+#When a test case is running, Python prints one
+# character for each unit test as it is completed.
+# A passing test prints a dot, a test that results in
+# an error prints an E, and a test that results in a
+# failed assertion prints an F. This is why you’ll see
+# a different number of dots and characters on the
+# first line of output when you run your test cases.
+# If a test case takes a long time to run because it
+# contains many unit tests, you can watch these results
+# to get a sense of how many tests are passing.
