@@ -1,11 +1,20 @@
 from random import choice
 import sys
 
-if len(sys.argv) < 3:
+def pass_gen_usage():
     print('Usage app.py <size_password> <weak/medium/strong>')
-    sys.exit ( 1 )
 
-size_password = int(sys.argv[1])
+
+if len(sys.argv) < 3:
+    pass_gen_usage()
+    sys.exit (1)
+
+try:
+    size_password = abs(int(sys.argv[1]))
+except ValueError:
+    pass_gen_usage()
+    sys.exit (1)
+
 type_password = sys.argv[2]
 
 a = {
@@ -44,5 +53,6 @@ while True:
         print(password)
         break
     else:
-        print("Wrong argument!")
-        break
+        pass_gen_usage()
+        sys.exit (1)
+
