@@ -15,7 +15,7 @@ except ValueError:
     pass_gen_usage()
     sys.exit (1)
 
-type_password = sys.argv[2]
+type_password = sys.argv[2].lower()
 
 a = {
     '1': '!@#$%^&*()-+?_=,<>/:;.',
