@@ -1,3 +1,8 @@
+#!/usr/bin/env python3
+# To see how much PyInputPlus is doing for you, try re-creating the multipli-
+# cation quiz project on your own without importing it.This program will
+# prompt the user with 10 multiplication questions, rans, ranging from 0 × 0 to
+# 9 × 9.
 import random, time
 
 
