@@ -1,9 +1,18 @@
 from random import choice
 import sys
 
+
 def pass_gen_usage():
     print('Usage app.py <size_password> <weak/medium/strong>')
 
+def pass_gen(pass_size, symbols):
+    password = ''
+    a_temp = ''
+    while pass_size:
+       a_temp = choice((symbols))
+       password += choice(a_temp)
+       pass_size -= 1
+    return password
 
 if len(sys.argv) < 3:
     pass_gen_usage()
@@ -23,29 +32,12 @@ a = {
     '3': '1234567890',
 }
 
-password = ''
-a_temp = ''
-
-
 if type_password == "weak":
-   while size_password:
-       a_temp = choice(a['2'])
-       password += choice(a_temp)
-       size_password -= 1
-   print(password)
+    print(pass_gen(size_password, (a['2'])))
 elif type_password == "medium":
-   while size_password:
-       a_temp = choice((a['2'], a['3']))
-       password += choice(a_temp)
-       size_password -= 1
-   print(password)
+    print(pass_gen(size_password, (a['2'], a['3'])))
 elif type_password == "strong":
-   while size_password:
-       a_temp = choice((a['1'], a['2'], a['3']))
-       password += choice(a_temp)
-       size_password -= 1
-   print(password)
+    print(pass_gen(size_password, (a['1'], a['2'], a['3'])))
 else:
-   pass_gen_usage()
-   sys.exit (1)
-
+    pass_gen_usage()
+    sys.exit (1)
