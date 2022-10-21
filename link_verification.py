@@ -13,6 +13,9 @@ if len(sys.argv) < 2:
     print('Usage: app.py <URL>')
     sys.exit(1)
 
+if not sys.argv[1].startswith('https'):
+    sys.argv[1] = 'https://' + sys.argv[1]
+
 res = requests.get(sys.argv[1])
 res.raise_for_status()
 soup = bs4.BeautifulSoup(res.text, 'html.parser')
