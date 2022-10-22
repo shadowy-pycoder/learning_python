@@ -30,3 +30,6 @@ while not game_over:
         game_over = browser.find_element(By.LINK_TEXT, 'Try again')
     except:
         pass
+print('Game over!')
+game_score = browser.find_element(By.CLASS_NAME, 'score-container')
+print('Your score:', game_score.text)
