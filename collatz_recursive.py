@@ -15,7 +15,8 @@ def collatz(number=None, array=[]) -> list:
 
 print(collatz(15) == [15, 46, 23, 70, 35, 106, 53, 160, 80, 40, 20, 10, 5, 16, 8, 4, 2, 1])
 print(collatz() == [None])
-print(collatz(1) == [1])                                print(collatz(0) == [None])
+print(collatz(1) == [1])                                
+print(collatz(0) == [None])
 print(collatz(-2) == [None])
 print(collatz(5) == [5, 16, 8, 4, 2, 1])  
 try:
