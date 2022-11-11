@@ -17,19 +17,19 @@
 # is why you shouldn’t use a simple English word for your passwords.)
 import PyPDF2
 
-
 def password_breaker(reader: PyPDF2.PdfFileReader, string: str):
-    reader.decrypt(string.strip())
+    reader.decrypt(string)
     try:
         pdfReader.getPage(0)
     except:
         return
     else:
-        return string.strip()
+        return string
 
 
 with open('dictionary.txt') as file:
     passwords = file.readlines()
+passwords = list(map(lambda x: x.strip(), passwords))
 pdfFilePath = 'allminutes_encrypted.pdf'
 pdfFile = open(pdfFilePath, 'rb')
 
@@ -46,3 +46,5 @@ for password in passwords:
 else:
     print('Password not found')
 pdfFile.close()
+
+
