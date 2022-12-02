@@ -15,10 +15,10 @@ class LinkedList:
 
     def __init__(self, head) -> None:
         if isinstance(head, list):
-            self.head = Node(head.pop(0))
+            self.head = Node(head[0])
             current_node = self.head
-            while head:
-                current_node.next = Node(head.pop(0))
+            for i in range(1, len(head)):
+                current_node.next = Node(head[i])
                 current_node = current_node.next
         elif isinstance(head, Node):
             self.head = head
@@ -55,7 +55,10 @@ class LinkedList:
             node_list.append(node)
         if isinstance(key, slice):
             start, stop, step = key.indices(len(self))
-            return LinkedList([node_list[i] for i in range(start, stop, step)])
+            if (step > 0 and start < stop) or (step < 0 and start > stop):
+                return LinkedList([node_list[i] for i in range(start, stop, step)])
+            elif step == 0:
+                raise ValueError('slice step cannot be zero')
         elif isinstance(key, int):
             return node_list[key]
         elif isinstance(key, tuple):
