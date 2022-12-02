@@ -8,7 +8,7 @@ class Node:
         return f'Node({self.data!r})'
 
     def __str__(self):
-        return self.data
+        return f'{self.data}'
 
 
 class LinkedList:
@@ -40,12 +40,19 @@ class LinkedList:
         else:
             raise StopIteration
 
-    def __getitem__(self, index):
-        current_index = 0
+    def __getitem__(self, key):
+        node_list = list()
         for node in self.__iter__():
-            if current_index == index:
-                return node.data
-            current_index += 1
+            node_list.append(node)
+        if isinstance(key, slice):
+            start, stop, step = key.indices(len(self))
+            return [node_list[i] for i in range(start, stop, step)]
+        elif isinstance(key, int):
+            return node_list[key]
+        elif isinstance(key, tuple):
+            raise NotImplementedError('Tuple as index')
+        else:
+            raise TypeError(f'Invalid argument {type(key)}')
 
     def reverse(self):
         prev = None
