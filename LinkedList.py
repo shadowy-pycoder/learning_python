@@ -55,7 +55,7 @@ class LinkedList:
             node_list.append(node)
         if isinstance(key, slice):
             start, stop, step = key.indices(len(self))
-            if (step > 0 and start < stop) or (step < 0 and start > stop):
+            if (step > 0 and abs(start) < abs(stop)) or (step < 0 and abs(start) > abs(stop)):
                 return LinkedList([node_list[i] for i in range(start, stop, step)])
             elif step == 0:
                 raise ValueError('slice step cannot be zero')
