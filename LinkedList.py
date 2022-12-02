@@ -13,8 +13,17 @@ class Node:
 
 class LinkedList:
 
-    def __init__(self, head: Node) -> None:
-        self.head = head
+    def __init__(self, head) -> None:
+        if isinstance(head, list):
+            self.head = Node(head.pop(0))
+            current_node = self.head
+            while head:
+                current_node.next = Node(head.pop(0))
+                current_node = current_node.next
+        elif isinstance(head, Node):
+            self.head = head
+        else:
+            raise NotImplementedError(f'Invalid argument {type(head)}')
 
     def __repr__(self):
         nodes = list()
@@ -46,7 +55,7 @@ class LinkedList:
             node_list.append(node)
         if isinstance(key, slice):
             start, stop, step = key.indices(len(self))
-            return [node_list[i] for i in range(start, stop, step)]
+            return LinkedList([node_list[i] for i in range(start, stop, step)])
         elif isinstance(key, int):
             return node_list[key]
         elif isinstance(key, tuple):
@@ -63,3 +72,4 @@ class LinkedList:
             prev = current
             current = next
         self.head = prev
+
