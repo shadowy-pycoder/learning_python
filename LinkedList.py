@@ -90,6 +90,29 @@ class LinkedList:
                     prev_node.next = new_node
                     new_node.next = next_node
 
+    def __delitem__(self, key):
+        if key == 0:
+            next_node = self.__getitem__(key + 1)
+            self.head = next_node
+        elif key < 0:
+            print('Invalid argument')
+        else:
+            try:
+                prev_node = self.__getitem__(key - 1)
+            except IndexError:
+                print('Invalid argument')
+            else:
+                if prev_node.next is not None:
+                    try:
+                        next_node = self.__getitem__(key + 1)
+                    except IndexError:
+                        next_node = None
+                        prev_node.next = next_node
+                    else:
+                        prev_node.next = next_node
+                else:
+                    print('Invalid argument')
+
     def reverse(self):
         prev = None
         current = self.head
