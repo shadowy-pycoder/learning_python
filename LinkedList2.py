@@ -1,3 +1,6 @@
+import operator
+
+
 class Node:
 
     def __init__(self, data=None) -> None:
@@ -54,10 +57,26 @@ class LinkedList:
     def __iter__(self):
         return (i for i in self.nodes)
 
+    # def __getitem__(self, key):
+    #     return LinkedList(self.nodes[key])
+
     def __getitem__(self, key):
-        return LinkedList(self.nodes[key])
+        if isinstance(key, slice):
+            cls = type(self)
+            return cls(self.nodes[key])
+        index = operator.index(key)
+        return self.nodes[index]
+
+#    if the key argument is a slice...
+# ...get the class of the instance (i.e., LinkedList) and...
+# ...invoke the class to build another LinkedList instance from a slice of the
+# _components array.
+# If we can get an index from key...
+# ...return the specific item from _components.
 
     def __setitem__(self, key, new_node: Node):
+        if not isinstance(new_node, Node):
+            new_node = Node(new_node)
         if key == 0:
             self.head = new_node
         if key < 0:
@@ -90,3 +109,4 @@ class LinkedList:
         for i in range(1, len(self.nodes)):
             current_node.next = self.nodes[i]
             current_node = current_node.next
+         
