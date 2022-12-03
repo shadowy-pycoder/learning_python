@@ -69,7 +69,11 @@ class LinkedList:
     def __setitem__(self, key, new_node):
         if not isinstance(new_node, Node):
             new_node = Node(new_node)
-        if key <= 0:
+        if key == 0:
+            prev_node = self.head
+            self.head = new_node
+            self.head.next = prev_node
+        elif key < 0:
             print('Invalid argument')
         else:
             try:
