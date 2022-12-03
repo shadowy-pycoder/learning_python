@@ -1,6 +1,6 @@
 class Node:
 
-    def __init__(self, data) -> None:
+    def __init__(self, data=None) -> None:
         self.data = data
         self.next = None
 
@@ -66,6 +66,26 @@ class LinkedList:
         else:
             raise TypeError(f'Invalid argument {type(key)}')
 
+    def __setitem__(self, key, new_node):
+        if not isinstance(new_node, Node):
+            new_node = Node(new_node)
+        if key <= 0:
+            print('Invalid argument')
+        else:
+            try:
+                prev_node = self.__getitem__(key - 1)
+            except IndexError:
+                print('Invalid argument')
+            else:
+                try:
+                    next_node = self.__getitem__(key)
+                except IndexError:
+                    next_node = None
+                    prev_node.next = new_node
+                else:
+                    prev_node.next = new_node
+                    new_node.next = next_node
+
     def reverse(self):
         prev = None
         current = self.head
@@ -75,4 +95,3 @@ class LinkedList:
             prev = current
             current = next
         self.head = prev
-
