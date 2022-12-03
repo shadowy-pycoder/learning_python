@@ -29,10 +29,13 @@ class LinkedList:
         nodes = list()
         for node in self.__iter__():
             nodes.append(str(node))
-        return f"LinkedList({' -> '.join(nodes)})"
+        return f"LinkedList({' -> '.join(nodes[:6])} -> ...)"
 
     def __str__(self):
-        return self.__repr__()[11:-1] + ' -> None'
+        nodes = list()
+        for node in self.__iter__():
+            nodes.append(str(node))
+        return f"{' -> '.join(nodes)} -> None"
 
     def __len__(self):
         return len(self.__repr__()[11:-1].split(' -> '))
@@ -122,3 +125,4 @@ class LinkedList:
             prev = current
             current = next
         self.head = prev
+
