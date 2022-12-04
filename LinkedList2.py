@@ -62,43 +62,25 @@ class LinkedList:
         if isinstance(key, slice):
             cls = type(self)
             return cls(self.nodes[key])
-        index = operator.index(key)
-        return self.nodes[index]
+        key = operator.index(key)
+        return self.nodes[key]
 
-#    if the key argument is a slice...
-# ...get the class of the instance (i.e., LinkedList) and...
-# ...invoke the class to build another LinkedList instance from a slice of the
-# _components array.
-# If we can get an index from key...
-# ...return the specific item from _components.
-
-    def __setitem__(self, key, new_node: Node):
+    def __setitem__(self, key, new_node):
         if not isinstance(new_node, Node):
             new_node = Node(new_node)
-        if key == 0:
-            self.head = new_node
-        if key < 0:
-            raise IndexError('Index cannot be negative')
         self.nodes[key] = new_node
-        for index, node in enumerate(self.nodes):
-            if index == key - 1:
-                node.next = new_node
-            if index == key + 1:
-                new_node.next = node
-                break
+        self.__nodize(self.nodes)
 
     def __delitem__(self, key):
-        if key == 0:
-            self.head = self.head.next
-            del self.nodes[key]
-        elif key < 0 or key >= len(self.nodes):
-            raise IndexError('Invalid index')
-        elif key == len(self.nodes) - 1:
-            self.nodes[key-1].next = None
-            del self.nodes[key]
-        else:
-            self.nodes[key-1].next = self.nodes[key+1]
-            del self.nodes[key]
+        del self.nodes[key]
+        self.__nodize(self.nodes)
+
+    def __add__(self, other):
+        cls = type(self)
+        if not isinstance(other, cls):
+            raise NotImplementedError(
+                f'both values must be of the same class {cls}')
+        return cls(self.__nodize(self.nodes + other.nodes))
 
     def reverse(self):
         self.nodes = self.nodes[::-1]
@@ -111,13 +93,6 @@ class LinkedList:
     def insert_node(self, key, new_node):
         self.nodes.insert(key, new_node)
         self.__nodize(self.nodes)
-
-    def __add__(self, other):
-        cls = type(self)
-        if not isinstance(other, cls):
-            raise NotImplementedError(
-                f'both values must be of the same class {cls}')
-        return cls(self.__nodize(self.nodes + other.nodes))
 
     def __nodize(self, node_list):
         self.head = node_list[0]
