@@ -9,16 +9,16 @@ class Node:
         self.next = None
 
     def __repr__(self):
-        return f'Node({self.data})'
+        return f'Node({self.data!r})'
 
     def __str__(self):
-        return f'{self.data}'
+        return f'{self.data!r}'
 
 
 class LinkedList:
 
     def __init__(self, head) -> None:
-        self.nodes = self.__nodize(head)
+        self.__nodes = self.__nodize(head)
 
     def __repr__(self):
         cls_name = type(self).__name__
@@ -28,48 +28,48 @@ class LinkedList:
         return ' -> '.join([str(node) for node in self]) + ' -> None'
 
     def __len__(self):
-        return len(self.nodes)
+        return len(self.__nodes)
 
     def __iter__(self):
-        return iter(self.nodes)
+        return iter(self.__nodes)
 
     def __getitem__(self, key):
         if isinstance(key, slice):
             cls = type(self)
-            return cls(self.nodes[key])
+            return cls(self.__nodes[key])
         key = operator.index(key)
-        return self.nodes[key]
+        return self.__nodes[key]
 
     def __setitem__(self, key, new_node):
         if not isinstance(new_node, Node):
             new_node = Node(new_node)
-        self.nodes[key] = new_node
-        self.__nodize(self.nodes)
+        self.__nodes[key] = new_node
+        self.__nodize(self.__nodes)
 
     def __delitem__(self, key):
-        del self.nodes[key]
-        self.__nodize(self.nodes)
+        del self.__nodes[key]
+        self.__nodize(self.__nodes)
 
     def __add__(self, other):
         cls = type(self)
         if not isinstance(other, cls):
             raise NotImplementedError(
                 f'both values must be of the same class {cls}')
-        return cls(self.__nodize(self.nodes + other.nodes))
+        return cls(self.__nodize(self.__nodes + other.__nodes))
 
     def reverse(self):
-        self.nodes = self.nodes[::-1]
-        self.__nodize(self.nodes)
+        self.__nodes = self.__nodes[::-1]
+        self.__nodize(self.__nodes)
 
     def shuffle(self):
-        shuffle(self.nodes)
-        self.__nodize(self.nodes)
+        shuffle(self.__nodes)
+        self.__nodize(self.__nodes)
 
     def insert_node(self, key, new_node):
         if not isinstance(new_node, Node):
             new_node = Node(new_node)
-        self.nodes.insert(key, new_node)
-        self.__nodize(self.nodes)
+        self.__nodes.insert(key, new_node)
+        self.__nodize(self.__nodes)
 
     def __nodize(self, iterable):
         nodes = list(iterable)
