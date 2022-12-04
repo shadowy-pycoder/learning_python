@@ -68,6 +68,8 @@ class LinkedList:
         self.__nodize(self.nodes)
 
     def insert_node(self, key, new_node):
+        if not isinstance(new_node, Node):
+            new_node = Node(new_node)
         self.nodes.insert(key, new_node)
         self.__nodize(self.nodes)
 
