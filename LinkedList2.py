@@ -83,8 +83,9 @@ class LinkedList:
         self.__nodize(self.__nodes)
 
     def __nodize(self, iterable):
+        nodes = list(iterable)
         nodes = [node if isinstance(node, Node) else Node(node)
-                 for node in iterable]
+                 for node in nodes]
         self.head = nodes[0]
         current_node = self.head
         for i in range(1, len(nodes)):
