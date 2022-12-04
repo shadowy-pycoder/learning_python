@@ -18,35 +18,12 @@ class Node:
 class LinkedList:
 
     def __init__(self, head) -> None:
-        if isinstance(head, list):
-            if not isinstance(head[0], Node):
-                self.head = Node(head[0])
-                self.nodes = [self.head]
-                current_node = self.head
-                for i in range(1, len(head)):
-                    current_node.next = Node(head[i])
-                    self.nodes.append(current_node.next)
-                    current_node = current_node.next
-            else:
-                self.head = head[0]
-                self.nodes = [self.head]
-                current_node = self.head
-                for i in range(1, len(head)):
-                    current_node.next = head[i]
-                    self.nodes.append(current_node.next)
-                    current_node = current_node.next
-        elif isinstance(head, Node):
-            self.head = head
-            current, self.nodes = head, []
-            while current is not None:
-                self.nodes.append(current)
-                current = current.next
-        else:
-            raise NotImplementedError(f'Invalid argument {type(head)}')
+        self.nodes = self.__nodize(head)
 
     def __repr__(self):
+        cls_name = type(self).__name__
         nodes = [str(node) for node in self.nodes]
-        return f"LinkedList({' -> '.join(nodes[:6])} -> ...)"
+        return f"{cls_name}({' -> '.join(nodes[:6])} -> ...)"
 
     def __str__(self):
         nodes = [str(node) for node in self.nodes]
@@ -94,10 +71,13 @@ class LinkedList:
         self.nodes.insert(key, new_node)
         self.__nodize(self.nodes)
 
-    def __nodize(self, node_list):
-        self.head = node_list[0]
+    def __nodize(self, iterable):
+        nodes = list(iterable)
+        if not isinstance(nodes[0], Node):
+            nodes = [Node(node) for node in nodes]
+        self.head = nodes[0]
         current_node = self.head
-        for i in range(1, len(node_list)):
-            current_node.next = node_list[i]
+        for i in range(1, len(nodes)):
+            current_node.next = nodes[i]
             current_node = current_node.next
-        return node_list
+        return nodes
