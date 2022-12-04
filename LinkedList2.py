@@ -1,4 +1,5 @@
 import operator
+from random import shuffle
 
 
 class Node:
@@ -55,10 +56,7 @@ class LinkedList:
         return len(self.nodes)
 
     def __iter__(self):
-        return (i for i in self.nodes)
-
-    # def __getitem__(self, key):
-    #     return LinkedList(self.nodes[key])
+        return iter(self.nodes)
 
     def __getitem__(self, key):
         if isinstance(key, slice):
@@ -104,9 +102,27 @@ class LinkedList:
 
     def reverse(self):
         self.nodes = self.nodes[::-1]
-        self.head = self.nodes[0]
+        self.__nodize(self.nodes)
+
+    def shuffle(self):
+        shuffle(self.nodes)
+        self.__nodize(self.nodes)
+
+    def insert_node(self, key, new_node):
+        self.nodes.insert(key, new_node)
+        self.__nodize(self.nodes)
+
+    def __add__(self, other):
+        cls = type(self)
+        if not isinstance(other, cls):
+            raise NotImplementedError(
+                f'both values must be of the same class {cls}')
+        return cls(self.__nodize(self.nodes + other.nodes))
+
+    def __nodize(self, node_list):
+        self.head = node_list[0]
         current_node = self.head
-        for i in range(1, len(self.nodes)):
-            current_node.next = self.nodes[i]
+        for i in range(1, len(node_list)):
+            current_node.next = node_list[i]
             current_node = current_node.next
-         
+        return node_list
