@@ -52,10 +52,21 @@ class LinkedList:
 
     def __add__(self, other):
         cls = type(self)
-        if not isinstance(other, cls):
+        try:
+            self.__nodes.extend(other)
+        except TypeError:
             raise NotImplementedError(
-                f'both values must be of the same class {cls}')
-        return cls(self.__nodize(self.__nodes + other.__nodes))
+                f'{type(other)} is not iterable')
+        return cls(self.__nodize(self.__nodes))
+
+    def __radd__(self, other):
+        cls = type(self)
+        try:
+            other.extend(self.__nodes)
+        except AttributeError:
+            raise NotImplementedError(
+                f'{type(other)} is not {list} or {cls}')
+        return cls(self.__nodize(other))
 
     def reverse(self):
         self.__nodes = self.__nodes[::-1]
@@ -72,9 +83,8 @@ class LinkedList:
         self.__nodize(self.__nodes)
 
     def __nodize(self, iterable):
-        nodes = list(iterable)
-        if not isinstance(nodes[0], Node):
-            nodes = [Node(node) for node in nodes]
+        nodes = [node if isinstance(node, Node) else Node(node)
+                 for node in iterable]
         self.head = nodes[0]
         current_node = self.head
         for i in range(1, len(nodes)):
