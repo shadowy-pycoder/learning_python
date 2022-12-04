@@ -22,12 +22,10 @@ class LinkedList:
 
     def __repr__(self):
         cls_name = type(self).__name__
-        nodes = [str(node) for node in self.nodes]
-        return f"{cls_name}({' -> '.join(nodes[:6])} -> ...)"
+        return f"{cls_name}({' -> '.join([str(node) for node in self][:5])} -> ...)"
 
     def __str__(self):
-        nodes = [str(node) for node in self.nodes]
-        return f"{' -> '.join(nodes)} -> None"
+        return ' -> '.join([str(node) for node in self]) + ' -> None'
 
     def __len__(self):
         return len(self.nodes)
@@ -83,3 +81,4 @@ class LinkedList:
             current_node.next = nodes[i]
             current_node = current_node.next
         return nodes
+
