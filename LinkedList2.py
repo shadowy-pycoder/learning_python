@@ -18,6 +18,10 @@ class Node:
 class LinkedList:
 
     def __init__(self, head) -> None:
+        try:
+            iter(head)
+        except TypeError:
+            raise NotImplementedError('head must be iterable')
         self.__nodes = self.__nodize(head)
 
     def __repr__(self):
@@ -56,18 +60,16 @@ class LinkedList:
         try:
             nodes.extend(other)
         except TypeError:
-            raise NotImplementedError(
-                f'{type(other)} is not iterable')
+            return NotImplemented
         return cls(self.__nodize(nodes))
 
     def __radd__(self, other):
         cls = type(self)
-        nodes = list(other)
         try:
-            nodes.extend(self.__nodes)
-        except AttributeError:
-            raise NotImplementedError(
-                f'{type(other)} is not {list} or {cls}')
+            nodes = list(other)
+        except TypeError:
+            return NotImplemented
+        nodes.extend(self.__nodes)
         return cls(self.__nodize(nodes))
 
     def reverse(self):
