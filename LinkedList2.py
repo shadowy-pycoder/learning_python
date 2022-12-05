@@ -52,21 +52,23 @@ class LinkedList:
 
     def __add__(self, other):
         cls = type(self)
+        nodes = list(self.__nodes)
         try:
-            self.__nodes.extend(other)
+            nodes.extend(other)
         except TypeError:
             raise NotImplementedError(
                 f'{type(other)} is not iterable')
-        return cls(self.__nodize(self.__nodes))
+        return cls(self.__nodize(nodes))
 
     def __radd__(self, other):
         cls = type(self)
+        nodes = list(other)
         try:
-            other.extend(self.__nodes)
+            nodes.extend(self.__nodes)
         except AttributeError:
             raise NotImplementedError(
                 f'{type(other)} is not {list} or {cls}')
-        return cls(self.__nodize(other))
+        return cls(self.__nodize(nodes))
 
     def reverse(self):
         self.__nodes = self.__nodes[::-1]
@@ -92,4 +94,3 @@ class LinkedList:
             current_node.next = nodes[i]
             current_node = current_node.next
         return nodes
-
