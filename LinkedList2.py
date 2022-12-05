@@ -4,7 +4,7 @@ from random import shuffle
 
 class Node:
 
-    def __init__(self, data=None) -> None:
+    def __init__(self, data) -> None:
         self.data = data
         self.next = None
 
