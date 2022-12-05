@@ -54,23 +54,29 @@ class LinkedList:
         del self.__nodes[key]
         self.__nodize(self.__nodes)
 
+    def __iadd__(self, other):
+        cls = type(self)
+        if isinstance(other, cls):
+            self.__nodes.extend(other)
+        else:
+            try:
+                self.__nodes.extend(other)
+            except TypeError:
+                msg = (
+                    f"right operand in += must be '{cls.__name__}' or an iterable")
+                raise TypeError(msg) from None
+        self.__nodize(self.__nodes)
+        return self
+
     def __add__(self, other):
         cls = type(self)
-        nodes = list(self.__nodes)
-        try:
-            nodes.extend(other)
-        except TypeError:
+        if isinstance(other, cls):
+            return cls(self.__nodize(self.__nodes + other.__nodes))
+        else:
             return NotImplemented
-        return cls(self.__nodize(nodes))
 
     def __radd__(self, other):
-        cls = type(self)
-        try:
-            nodes = list(other)
-        except TypeError:
-            return NotImplemented
-        nodes.extend(self.__nodes)
-        return cls(self.__nodize(nodes))
+        return self + other
 
     def reverse(self):
         self.__nodes = self.__nodes[::-1]
