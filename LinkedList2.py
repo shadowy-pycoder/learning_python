@@ -75,9 +75,6 @@ class LinkedList:
         else:
             return NotImplemented
 
-    def __radd__(self, other):
-        return self + other
-
     def reverse(self):
         self.__nodes = self.__nodes[::-1]
         self.__nodize(self.__nodes)
