@@ -20,14 +20,23 @@ class PublicKey:
     gpoint = (gx, gy)  # This is generator point.
 
     def __init__(self, private_key):
+
+        self.private_key = private_key
+
+    @property
+    def private_key(self):
+        return self.__private_key
+
+    @private_key.setter
+    def private_key(self, key):
         try:
-            private_key = int(private_key, 16)
+            key = int(str(key), 16)
         except ValueError:
             raise NotImplementedError(
                 'Private key must be a hexadecimal number')
-        if private_key <= 0 or private_key >= self.n_curve:
+        if key <= 0 or key >= self.n_curve:
             raise Exception("Invalid Scalar/Private Key")
-        self.__private_key = private_key
+        self.__private_key = key
 
     def __modinv(self, a, n):
         """Extended Euclidean Algorithm"""
@@ -70,7 +79,7 @@ class PublicKey:
 
     def __compute_public(self):
         """Calculating a public key"""
-        return self.__ec_multiply(self.gpoint, self.__private_key)
+        return self.__ec_multiply(self.gpoint, self.private_key)
 
     def __public_address(self, key):
         """Function calculating address"""
@@ -86,9 +95,9 @@ class PublicKey:
         """Converting a private key to WIF"""
 
         # convert private key to bytes for sha256
-        private_wif = bytes.fromhex(f"80{hex(self.__private_key)[2:]:0>64}")
+        private_wif = bytes.fromhex(f"80{hex(self.private_key)[2:]:0>64}")
         private_wif_comp = bytes.fromhex(
-            f"80{hex(self.__private_key)[2:]:0>64}01")
+            f"80{hex(self.private_key)[2:]:0>64}01")
 
         checksum = sha256(sha256(private_wif))
         checksum_comp = sha256(sha256(private_wif_comp))
@@ -142,3 +151,8 @@ prompt = input(f"Please insert your private key in HEX format (0x): ")
 my_key = PublicKey(prompt)
 my_key.print_public_key()
 my_key.print_private_keys_wif()
+for i in range(10, 16):
+    my_key.private_key = hex(i)
+    print(f'0x{hex(my_key.private_key)[2:]:0>64}')
+    my_key.print_public_key()
+    my_key.print_private_keys_wif()
