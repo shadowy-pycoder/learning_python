@@ -31,7 +31,7 @@ class PublicKey:
 
     @private_key.setter
     def private_key(self, key):
-        # catch invalid private keys as early as possible
+        # catch ivalid private keys as early as possible
         try:
             key = int(str(key), 16)
         except ValueError:
@@ -159,16 +159,12 @@ class PublicKey:
         print("\nThe official Public Key - compressed:")
         if public_key[1] % 2 == 1:  # If the Y value for the Public Key is odd.
             comp_pub = f"03{hex(public_key[0])[2:]:0>64}"
-            print(comp_pub)
-            print(f"Length: {len(comp_pub)}\n")
-            comp_addr = self.__public_address(comp_pub)
-            print(f"Address from compressed key\n{comp_addr}")
         else:  # Or else, if the Y value is even.
             comp_pub = f"02{hex(public_key[0])[2:]:0>64}"
-            print(comp_pub)
-            print(f"Length: {len(comp_pub)}\n")
-            comp_addr = self.__public_address(comp_pub)
-            print(f"Address from compressed key\n{comp_addr}")
+        print(comp_pub)
+        print(f"Length: {len(comp_pub)}\n")
+        comp_addr = self.__public_address(comp_pub)
+        print(f"Address from compressed key\n{comp_addr}")
 
 
 prompt = input(f"Please insert your private key in HEX format (0x): ")
