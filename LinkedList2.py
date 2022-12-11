@@ -17,12 +17,15 @@ class Node:
 
 class LinkedList:
 
+    all: list["LinkedList"] = []
+
     def __init__(self, head) -> None:
         try:
             iter(head)
         except TypeError:
             raise NotImplementedError('head must be iterable')
         self.__nodes = self.__nodize(head)
+        LinkedList.all.append(self)
 
     def __repr__(self):
         cls_name = type(self).__name__
@@ -99,3 +102,12 @@ class LinkedList:
             current_node.next = nodes[i]
             current_node = current_node.next
         return nodes
+
+    @classmethod
+    def from_file(cls, filename):
+        with open(filename, 'r') as file:
+            lines = file.readlines()
+        for line in lines:
+            head = ''.join(char for char in line if char.isalnum())
+            if head:
+                cls(head)
