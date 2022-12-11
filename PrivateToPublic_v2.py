@@ -31,7 +31,7 @@ class PublicKey:
 
     @private_key.setter
     def private_key(self, key):
-        # catch ivalid private keys as early as possible
+        # catch invalid private keys as early as possible
         try:
             key = int(str(key), 16)
         except ValueError:
