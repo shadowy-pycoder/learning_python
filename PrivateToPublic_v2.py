@@ -9,6 +9,8 @@ class PublicKey:
 
     """Calculating public key from private key"""
     """Parameters of an elliptic curve"""
+    # you can find these parameters here https://en.bitcoin.it/wiki/Secp256k1 or
+    # in the official specification https://www.secg.org/sec2-v2.pdf
     p_curve = (2**256 - 2**32 - 2**9 - 2**8 - 2**7 -
                2**6 - 2**4 - 1)  # The proven prime
     # Number of points in the field
@@ -29,6 +31,7 @@ class PublicKey:
 
     @private_key.setter
     def private_key(self, key):
+        # catch ivalid private keys as early as possible
         try:
             key = int(str(key), 16)
         except ValueError:
@@ -41,7 +44,7 @@ class PublicKey:
 
     def __modinv(self, a, n):
         """Extended Euclidean Algorithm"""
-
+        # https://www.geeksforgeeks.org/euclidean-algorithms-basic-and-extended/
         lm, hm = 1, 0
         low, high = a % n, n
         while low > 1:
@@ -52,7 +55,7 @@ class PublicKey:
 
     def __ec_add(self, a, b):
         """Point addition"""
-
+        # https://en.wikipedia.org/wiki/Elliptic_curve_point_multiplication#Point_addition
         lam_add = ((b[1]-a[1]) * self.__modinv(b[0] -
                    a[0], self.p_curve)) % self.p_curve
         x = (pow(lam_add, 2)-a[0]-b[0]) % self.p_curve
@@ -61,7 +64,7 @@ class PublicKey:
 
     def __ec_double(self, a):
         """EC point doubling"""
-
+        # https://en.wikipedia.org/wiki/Elliptic_curve_point_multiplication#Point_doubling
         lam = ((3*a[0]*a[0]+self.a_curve) *
                self.__modinv((2*a[1]), self.p_curve)) % self.p_curve
         x = int((lam*lam-2*a[0]) % self.p_curve)
@@ -70,6 +73,7 @@ class PublicKey:
 
     def __ec_multiply(self, genpoint, scalarhex):
         """EC point multiplication"""
+        # https://en.wikipedia.org/wiki/Elliptic_curve_point_multiplication#Double-and-add
         scalarbin = str(bin(scalarhex))[2:]
         q = genpoint
         for i in range(1, len(scalarbin)):  # Double and add to multiply point
@@ -84,11 +88,23 @@ class PublicKey:
 
     def __public_address(self, key):
         """Function calculating address"""
+        # steps are described here https://en.bitcoin.it/wiki/Technical_background_of_version_1_Bitcoin_addresses
         # bytes representation is needed for sha256 and ripemd160
         key = bytes.fromhex(key)
+        # Take the corresponding public key
+        # Perform SHA-256 hashing on the public key
+        # Perform RIPEMD-160 hashing on the result of SHA-256
+        # Add version byte in front of RIPEMD-160 hash (0x00 for Main Network)
         address = bytes.fromhex(f"00{ripemd160(sha256(key)).hex()}")
+        # Perform SHA-256 hash on the extended RIPEMD-160 result
+        # Perform SHA-256 hash on the result of the previous SHA-256 hash
         checksum = sha256(sha256(address))
+        # Take the first 4 bytes of the second SHA-256 hash. This is the address checksum
+        # Add the checksum bytes at the end of extended RIPEMD-160 hash.
+        # This is the 25-byte binary Bitcoin Address.
         address = f"{address.hex()}{checksum.hex()[:8]}"
+        # Convert the result from a byte string into a base58 string using Base58Check encoding.
+        # This is the most commonly used Bitcoin Address format
         address = base58.b58encode(bytes.fromhex(address)).decode("UTF-8")
         return address
 
@@ -96,16 +112,21 @@ class PublicKey:
         """Converting a private key to WIF"""
 
         # convert private key to bytes for sha256
+        # steps are described here https://en.bitcoin.it/wiki/Wallet_import_format
+        # take a private key in hex and add a 0x80 byte in front of it for mainnet addresses
         private_wif = bytes.fromhex(f"80{hex(self.private_key)[2:]:0>64}")
         private_wif_comp = bytes.fromhex(
             f"80{hex(self.private_key)[2:]:0>64}01")
-
+        # Perform SHA-256 hash on the extended key.
+        # Perform SHA-256 hash on result of SHA-256 hash.
         checksum = sha256(sha256(private_wif))
         checksum_comp = sha256(sha256(private_wif_comp))
-
+        # Take the first 4 bytes of the second SHA-256 hash; this is the checksum.
+        # Add the checksum bytes at the end of the extended key.
         private_wif = f"{private_wif.hex()}{checksum.hex()[:8]}"
         private_wif_comp = f"{private_wif_comp.hex()}{checksum_comp.hex()[:8]}"
-
+        # Convert the result from a byte string into a base58 string using Base58Check encoding.
+        # This is the wallet import format (WIF).
         private_wif = base58.b58encode(
             bytes.fromhex(private_wif)).decode("UTF-8")
         private_wif_comp = base58.b58encode(
