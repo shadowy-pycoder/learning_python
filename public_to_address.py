@@ -25,17 +25,10 @@ if len(sys.argv) < 3:
 
 path_src = sys.argv[1]
 path_dest = sys.argv[2]
-addresses = []
 
 with open(path_src, 'r', encoding='UTF-8') as file:
     pub_keys = file.readlines()
 
-pub_keys = (pub_key.strip() for pub_key in pub_keys)
-
-for pub_key in pub_keys:
-    addr = public_address(pub_key)
-    addresses.append(addr)
-
 with open(path_dest, 'w', encoding='UTF-8') as file:
-    for address in addresses:
-        file.write(address + '\n')
+    for pub_key in pub_keys:
+        file.write(public_address(pub_key.strip()) + '\n')
