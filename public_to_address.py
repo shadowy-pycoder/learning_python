@@ -5,7 +5,7 @@
 
 import base58
 import sys
-
+# these modules are taken from here https://github.com/karpathy/cryptos/tree/main/cryptos
 from ripemd160 import ripemd160
 from sha256 import sha256
 
