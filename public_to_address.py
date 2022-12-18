@@ -28,11 +28,11 @@ def main():
     path_dest = sys.argv[2]
 
     with open(path_src, 'r', encoding='UTF-8') as file:
-        pub_keys = file.readlines()
+        pub_keys = file.read().splitlines()
 
     with open(path_dest, 'w', encoding='UTF-8') as file:
         for pub_key in pub_keys:
-            file.write(public_address(pub_key.strip()) + '\n')
+            file.write(public_address(pub_key) + '\n')
 
 
 if __name__ == '__main__':
