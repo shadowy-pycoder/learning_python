@@ -114,9 +114,9 @@ class PublicKey:
         # convert private key to bytes for sha256
         # steps are described here https://en.bitcoin.it/wiki/Wallet_import_format
         # take a private key in hex and add a 0x80 byte in front of it for mainnet addresses
-        private_wif = bytes.fromhex(f"80{hex(self.private_key)[2:]:0>64}")
+        private_wif = bytes.fromhex(f"80{self.private_key:0>64x}")
         private_wif_comp = bytes.fromhex(
-            f"80{hex(self.private_key)[2:]:0>64}01")
+            f"80{self.private_key:0>64x}01")
         # Perform SHA-256 hash on the extended key.
         # Perform SHA-256 hash on result of SHA-256 hash.
         checksum = sha256(sha256(private_wif))
@@ -137,7 +137,7 @@ class PublicKey:
     def print_private_keys(self):
         """Printing private keys in WIF"""
         priv_key, priv_key_comp = self.__convert_private_to_wif()
-        priv_hex = f'0x{hex(self.private_key)[2:]:0>64}'
+        priv_hex = f'0x{self.private_key:0>64x}'
         print(f"\nHEX - private key\n{priv_hex}")
         print(f"Length: {len(priv_hex)}\n")
         print(f"\nWIF - private key\n{priv_key}")
@@ -151,16 +151,16 @@ class PublicKey:
         print("\nThe uncompressed public key (not address):")
         print(public_key)
         print("\nThe uncompressed public key (HEX):")
-        uncomp_pub = f"04{(hex(public_key[0])[2:]):0>64}{(hex(public_key[1])[2:]):0>64}"
+        uncomp_pub = f"04{public_key[0]:0>64x}{public_key[1]:0>64x}"
         print(uncomp_pub)
         print(f"Length: {len(uncomp_pub)}\n")
         uncomp_addr = self.__public_address(uncomp_pub)
         print(f"Address from uncompressed key\n{uncomp_addr}")
         print("\nThe official Public Key - compressed:")
         if public_key[1] % 2 == 1:  # If the Y value for the Public Key is odd.
-            comp_pub = f"03{hex(public_key[0])[2:]:0>64}"
+            comp_pub = f"03{public_key[0]:0>64x}"
         else:  # Or else, if the Y value is even.
-            comp_pub = f"02{hex(public_key[0])[2:]:0>64}"
+            comp_pub = f"02{public_key[0]:0>64x}"
         print(comp_pub)
         print(f"Length: {len(comp_pub)}\n")
         comp_addr = self.__public_address(comp_pub)
