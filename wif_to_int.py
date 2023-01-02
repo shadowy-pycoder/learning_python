@@ -9,8 +9,7 @@ def wif_to_bytes(wif: str) -> tuple[bytes, ...]:
 
 
 def is_checksum_valid(version: bytes, private_key: bytes, checksum: bytes) -> bool:
-    checksum_temp = sha256(sha256(version + private_key))[:4]
-    return checksum_temp == checksum
+    return sha256(sha256(version + private_key))[:4] == checksum
 
 
 def wif_to_int_private_key(wif: str) -> int:
