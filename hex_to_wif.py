@@ -26,7 +26,7 @@ def valid_key(key_s: str) -> bool:
 
 def hex_to_wif(key: str, *, uncompressed: bool = False) -> str:
     '''
-    Converts a hexadecimal number to a WIF - private key_hex
+    Converts a hexadecimal number to a WIF - private key
     '''
     if not valid_key(key):
         return f"Invalid Scalar/Private Key ({key}) Skipped..."
