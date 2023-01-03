@@ -14,22 +14,26 @@ from sha256 import sha256  # https://github.com/karpathy/cryptos/tree/main/crypt
 N_CURVE = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141
 
 
-def hex_to_wif(key: str, *, uncompressed=False) -> str:
-    '''
-    Converts a hexadecimal number to a WIF - private key
-    '''
+def valid_key(key_s: str) -> bool:
     try:
-        key = int(key, 16)
+        key_h = int(key_s, 16)
     except ValueError:
+        return False
+    if key_h <= 0 or key_h >= N_CURVE:
+        return False
+    return True
+
+
+def hex_to_wif(key: str, *, uncompressed: bool = False) -> str:
+    '''
+    Converts a hexadecimal number to a WIF - private key_hex
+    '''
+    if not valid_key(key):
         return f"Invalid Scalar/Private Key ({key}) Skipped..."
-    if key <= 0 or key >= N_CURVE:
-        return f"Invalid Scalar/Private Key ({hex(key)}) Skipped..."
-    key = f"80{key:0>64x}" if uncompressed else f"80{key:0>64x}01"
-    private_wif = bytes.fromhex(key)
-    checksum = sha256(sha256(private_wif))
-    private_wif = f"{private_wif.hex()}{checksum.hex()[:8]}"
-    private_wif = base58.b58encode(
-        bytes.fromhex(private_wif)).decode("UTF-8")
+    private_b = bytes.fromhex(
+        f"80{key.lstrip('0x'):0>64}" if uncompressed else f"80{key.lstrip('0x'):0>64}01")
+    private_b = private_b + sha256(sha256(private_b))[:4]
+    private_wif = base58.b58encode(private_b).decode("UTF-8")
     return private_wif
 
 
@@ -46,7 +50,7 @@ def main():
 
     with open(path_dest, 'w', encoding='UTF-8') as file:
         for hex_key in hex_keys:
-            file.write(hex_to_wif(hex_key, uncompressed=True) + '\n')
+            file.write(hex_to_wif(hex_key) + '\n')
 
 
 if __name__ == '__main__':
