@@ -32,12 +32,12 @@ def hex_to_wif(key: str, *, uncompressed: bool = False) -> str:
         return f"Invalid Scalar/Private Key ({key}) Skipped..."
     private_b = bytes.fromhex(
         f"80{key.lstrip('0x'):0>64}" if uncompressed else f"80{key.lstrip('0x'):0>64}01")
-    private_b = private_b + sha256(sha256(private_b))[:4]
-    private_wif = base58.b58encode(private_b).decode("UTF-8")
+    private_wif = base58.b58encode(
+        private_b + sha256(sha256(private_b))[:4]).decode("UTF-8")
     return private_wif
 
 
-def main():
+def main() -> None:
     if len(sys.argv) < 3:
         print('Usage: app.py <path/to/src> <path/to/dest>')
         sys.exit(1)
