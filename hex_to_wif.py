@@ -19,9 +19,7 @@ def valid_key(key_s: str) -> bool:
         key_h = int(key_s, 16)
     except ValueError:
         return False
-    if key_h <= 0 or key_h >= N_CURVE:
-        return False
-    return True
+    return not (key_h <= 0 or key_h >= N_CURVE)
 
 
 def hex_to_wif(key: str, *, uncompressed: bool = False) -> str:
