@@ -12,8 +12,7 @@ from sha256 import sha256
 
 def public_address(key: str) -> str:
     address = b'\x00' + ripemd160(sha256(bytes.fromhex(key)))
-    checksum = sha256(sha256(address))[:4]
-    return base58.b58encode(address + checksum).decode("UTF-8")
+    return base58.b58encode(address + sha256(sha256(address))[:4]).decode("UTF-8")
 
 
 def main():
