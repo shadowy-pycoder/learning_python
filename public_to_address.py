@@ -5,18 +5,15 @@
 
 import base58
 import sys
-# these modules are taken from here https://github.com/karpathy/cryptos/tree/main/cryptos
+
 from ripemd160 import ripemd160
 from sha256 import sha256
 
 
-def public_address(key):
-    key = bytes.fromhex(key)
-    address = bytes.fromhex(f"00{ripemd160(sha256(key)).hex()}")
-    checksum = sha256(sha256(address))
-    address = f"{address.hex()}{checksum.hex()[:8]}"
-    address = base58.b58encode(bytes.fromhex(address)).decode("UTF-8")
-    return address
+def public_address(key: str) -> str:
+    address = b'\x00' + ripemd160(sha256(bytes.fromhex(key)))
+    checksum = sha256(sha256(address))[:4]
+    return base58.b58encode(address + checksum).decode("UTF-8")
 
 
 def main():
@@ -37,3 +34,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
