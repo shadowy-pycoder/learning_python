@@ -21,9 +21,9 @@ def slower(
     factor: int = 0,
     border_sleep_time: int = 0
 ) -> Callable:
-    def decorate(func: Callable[[ML], ML | None]) -> Callable:
+    def decorate(func: Callable[[Any], Any]) -> Callable:
         @wraps(func)
-        def slow(num: ML) -> None:
+        def slow(arg: Any) -> None:
             nonlocal start_sleep_time
             print('Number of calls', call_count)
             print('Start')
@@ -34,15 +34,15 @@ def slower(
                 start_sleep_time = t
                 print(f'Function call {call}. Waiting {t} seconds... ', end='')
                 sleep(t)
-                print('Result: ', func(num))
+                print('Result: ', func(arg))
             print('End')
         return slow
     return decorate
 
 
 @slower(call_count=3, start_sleep_time=1, factor=1, border_sleep_time=100)
-def multiplier(param: Optional[ML] = None) -> ML | None:
-    return param * 2 if param is not None else param
+def multiplier(param: ML) -> ML | None:
+    return param * 2 if param else None
 
 
 multiplier(5)
