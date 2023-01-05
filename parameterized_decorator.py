@@ -4,7 +4,7 @@
 # to the boundary timeout (border_sleep_time).
 from functools import wraps
 from time import sleep
-from typing import Callable, TypeVar, Optional, Protocol, Any
+from typing import Callable, TypeVar, Protocol, Any
 
 
 class SupportsMul(Protocol):
