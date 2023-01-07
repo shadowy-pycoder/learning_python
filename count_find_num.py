@@ -24,22 +24,18 @@ def count_find_num(primesL: list[int], limit: int) -> list[int]:
     generated with given prime numbers and maximum number.
     '''
     primes = sorted(primesL)
-    min_length = len(primes)
     results = list()
-    shortest = primes[0]
-    suffix = primes[1:]
+    shortest, suffix = primes[0], primes[1:]
     results.extend(suffix)
     product = reduce(mul, [prime for prime in suffix], 1)
+    result = 0
     k = 1
-    while True:
+    while result < limit:
         result = shortest ** k * product
-        if result < limit:
-            results.append(shortest)
-            k += 1
-        else:
-            max_length = len(results) + 1
-            results.clear()
-            break
+        results.append(shortest)
+        k += 1
+    results.clear()
+    min_length, max_length = len(primes), len(results) + 1
     for i in range(min_length, max_length):
         for combo in combinations_with_replacement(primes, i):
             if len(set(combo)) >= min_length:
