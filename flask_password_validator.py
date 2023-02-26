@@ -1,4 +1,4 @@
-def validate_password(self, password):
+def validate_password(password):
         import re
         message = 'Password should contain at least '
         error_log = []
