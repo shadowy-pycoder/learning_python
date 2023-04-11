@@ -20,7 +20,7 @@ if response.status_code == 200:
         'nonce': int(block['nonce']).to_bytes(4, 'little')
     }
 
-header_bin = b''.join(chunk for chunk in block_dict.values())
-header_hash = hashlib.sha256(hashlib.sha256(header_bin).digest()).digest()[::-1].hex()
-print(header_hash)
-assert header_hash == block['hash']
+    header_bin = b''.join(chunk for chunk in block_dict.values())
+    header_hash = hashlib.sha256(hashlib.sha256(header_bin).digest()).digest()[::-1].hex()
+    print(header_hash)
+    assert header_hash == block['hash']
