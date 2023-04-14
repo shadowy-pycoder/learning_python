@@ -1,5 +1,3 @@
-# original https://github.com/ragestack/blockchain-parser/blob/master/blockchain-parser.py
-
 # -*- coding: utf-8 -*-
 #
 # Blockchain parser
@@ -21,7 +19,7 @@ def reverse(input):
             T = input[i*2] + input[i*2+1]
             Res = T + Res
             T = ''
-        return (Res);
+        return Res
 
 def merkle_root(lst): # https://gist.github.com/anonymous/7eb080a67398f648c1709e41890f8c44
     sha256d = lambda x: hashlib.sha256(hashlib.sha256(x).digest()).digest()
@@ -62,6 +60,7 @@ dirB = './result/' # Directory where to save parsing results
 
 fList = os.listdir(dirA)
 fList = [x for x in fList if (x.endswith('.dat') and x.startswith('blk'))]
+#fList = [x for x in fList if x == 'blk00005.dat']
 fList.sort()
 
 for i in fList:
@@ -77,6 +76,7 @@ for i in fList:
         fSize = os.path.getsize(t)
         while f.tell() != fSize:
             tmpHex = read_bytes(f,4)
+            if tmpHex == '00000000': break
             resList.append('Magic number = ' + tmpHex)
             tmpHex = read_bytes(f,4)
             resList.append('Block size = ' + tmpHex)
@@ -104,6 +104,7 @@ for i in fList:
             resList.append('Random number = ' + tmpHex)
             tmpHex = read_varint(f)
             txCount = int(tmpHex,16)
+            
             resList.append('Transactions count = ' + str(txCount))
             resList.append('')
             tmpHex = ''; RawTX = ''; tx_hashes = []
@@ -245,13 +246,9 @@ for i in fList:
                 resList.append(''); tmpHex = ''; RawTX = ''
             a += 1
             tx_hashes = [bytes.fromhex(h) for h in tx_hashes]
-            if tx_hashes:
-                tmpHex = merkle_root(tx_hashes).hex().upper()
-                if tmpHex != MerkleRoot:
-                    print ('Merkle roots does not match! >',MerkleRoot,tmpHex)
-            else:
-                break
-    f = open(dirB + nameRes,'w')
-    for j in resList:
-        f.write(j + '\n')
-    f.close()
+            tmpHex = merkle_root(tx_hashes).hex().upper()
+            if tmpHex != MerkleRoot:
+                print ('Merkle roots does not match! >',MerkleRoot,tmpHex)
+    with open(dirB + nameRes,'w') as f:
+        for j in resList:
+            f.write(j + '\n')
